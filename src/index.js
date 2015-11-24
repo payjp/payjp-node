@@ -3,33 +3,23 @@ import Customer from './customer';
 
 export default class Payjp {
 
-  constructor(publicKey, config = {}) {
-    if (!publicKey) {
-      throw new Error('Please set publicKey.');
+  constructor(publickey, config = {}) {
+    if (!publickey) {
+      throw new Error('Please set publickey.');
     }
 
-    this.publicKey = publicKey;
-    this.config = config;
+    this.publickey = publickey;
+    this.config = this.makeConfig(config);
 
-    this.customers = new Customer();
+    this.customers = new Customer(this);
   }
 
-  set publicKey(key) {
-    Resource.prototype._publicKey = key;
-  }
-
-  set config(config) {
-    const _config = {
+  makeConfig(config) {
+    return {
       host: config.host || 'api.pay.jp',
       port: config.port || 443,
       apibase: config.apibase || 'v1'
-    };
-
-    Resource.prototype.config = {
-      host: _config.host,
-      port: _config.port,
-      apibase: _config.apibase
-    };
+    }
   }
 
 }

@@ -2,21 +2,16 @@ import request from 'superagent';
 
 export default class Resource {
 
-  request(endpoint, method, query) {
-    console.log('key in request(), => ', this.key);
-    console.log(endpoint, method, query);
+  constructor(payjp) {
+    this.payjp = payjp;
   }
 
   get apibase() {
-    return this.config.apibase;
+    return this.payjp.config.apibase;
   }
 
-  set publicKey(key) {
-    this._publicKey = key;
-  }
-
-  get publicKey() {
-    return this._publicKey;
+  get publickey() {
+    return this.payjp.publickey;
   }
 
   toQueryString(obj) {
@@ -30,7 +25,7 @@ export default class Resource {
   }
 
   request(endpoint, method, query) {
-    const encodedKey = new Buffer(`${this.publicKey}:`).toString('base64');
+    const encodedKey = new Buffer(`${this.publickey}:`).toString('base64');
 
     let _headers = {
       Accept: 'application/json',
@@ -39,7 +34,7 @@ export default class Resource {
     let _url;
     let _query;
 
-    _url = `https://api.pay.jp/${this.config.apibase}/${endpoint}`;
+    _url = `https://api.pay.jp/${this.apibase}/${endpoint}`;
 
     if (method === 'GET') {
       if (query) {
@@ -56,9 +51,17 @@ export default class Resource {
       console.log('body => ', _query);
       console.log('_url => ', _url);
 
-      request(method, _url, _query)
+      let _request = request(method, _url)
         .set(_headers)
-        .query(_query)
+      ;
+
+      if (method === 'GET') {
+        _request.query(_query);
+      } else if (method === 'POST') {
+        _request.send(_query);
+      }
+
+      _request
         .end((err, res) => {
           if (res.statusCode === 200) {
             resolve(res.body);
@@ -70,6 +73,36 @@ export default class Resource {
 
     });
 
+  }
+
+  list(query = {}) {
+    return Promise.resolve(
+      this.request(this.resource, 'GET', query)
+    ).then(this.payjplize);
+  }
+
+  retrieve(query = {}) {
+    return Promise.resolve(
+      this.request(`${this.resource}/${query.id}`, 'GET')
+    ).then(this.payjplize);
+  }
+
+  create(query = {}) {
+    return Promise.resolve(
+      this.request(this.resource, 'POST', query)
+    ).then(this.payjplize);
+  }
+
+  update(id, query = {}) {
+    return Promise.resolve(
+      this.request(`${this.resource}/${id}`, 'POST', query)
+    ).then(this.payjplize);
+  }
+
+  delete(query = {}) {
+    return Promise.resolve(
+      this.request(`${this.resource}/${query.id}`, 'DELETE')
+    ).then(this.payjplize);
   }
 
 }

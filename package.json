@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:espower-babel/guess test/**/*.js"
+    "test": "./node_modules/.bin/mocha --compilers js:espower-babel/guess test/**/*.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "babel-loader": "^5.3.2",
     "eslint": "^1.7.2",
     "espower-babel": "^3.3.0",
+    "gulp": "^3.9.0",
     "mocha": "^2.3.3",
     "power-assert": "^1.1.0",
     "webpack": "^1.12.2"

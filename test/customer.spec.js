@@ -4,33 +4,67 @@ import Payjp from '../src';
 
 const AUTH_KEY = 'sk_test_c62fade9d045b54cd76d7036';
 
-var payjp = new Payjp(AUTH_KEY);
+const payjp = new Payjp(AUTH_KEY);
 
-describe('Customers Resource', function () {
+describe('Customers Resource', () => {
 
-  describe('list', function () {
-    it('Sends the correct request', function () {
+  var _customer;
+
+  describe('list', () => {
+    it('Sends the correct customer list request', () => {
       return payjp.customers.list().then((res) => {
         assert(res.count > 0);
+        // console.log(res);
       });
     });
   });
 
-  // describe('create', function () {
-  //   it('Sends the correct request', function () {
-  //     const query = {};
-  //     return payjp.customers.create(query).then((res) => {
-  //       assert('id' in res.body);
-  //     });
-  //   });
-  // });
-  //
-  // describe('retrieve', function () {
-  //   it('Sends the correct request', function () {
-  //     return payjp.customers.retrieve(this.customer.id).then((res) => {
-  //       assert('id' in res.body); // てきとう
-  //     });
-  //   });
-  // });
+  describe('create', () => {
+    it('Sends the correct request', () => {
+      const query = {
+        email: 'payjp-node@example.com'
+      };
+      return payjp.customers.create(query).then((res) => {
+        assert.equal(res.object, 'customer');
+        assert.equal(res.email, query.email);
+
+        _customer = res;
+      });
+    });
+  });
+
+  describe('retrieve', () => {
+    it('Sends the correct request', () => {
+      const query = {
+        id: _customer.id
+      };
+      return payjp.customers.retrieve(query).then((res) => {
+        assert.ok(res.id, _customer.id);
+      });
+    });
+  });
+
+  describe('update', () => {
+    it('Sends the correct request', () => {
+      const query = {
+        email: 'payjp-node-updated@example.com'
+      };
+      return payjp.customers.update(_customer.id, query).then((res) => {
+        assert.equal(res.email, query.email);
+      });
+    });
+  });
+
+  describe('delete', () => {
+    it('Sends the correct request', () => {
+      const query = {
+        id: _customer.id
+      };
+      return payjp.customers.delete(query).then((res) => {
+        assert.ok(res.deleted)
+        assert.equal(res.id, _customer.id);
+      });
+    });
+  });
 
 });
