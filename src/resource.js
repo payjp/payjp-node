@@ -24,20 +24,20 @@ export default class Resource {
     return str.join('&');
   }
 
-  request(endpoint, method, query) {
+  request(endpoint, method, query = {}) {
     const encodedKey = new Buffer(`${this.publickey}:`).toString('base64');
 
     let _headers = {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`
     };
-    let _url;
+
+    let _url = `https://stage-api.pay.jp/${this.apibase}/${endpoint}`;
+
     let _query;
 
-    _url = `https://api.pay.jp/${this.apibase}/${endpoint}`;
-
     if (method === 'GET') {
-      if (query) {
+      if (Object.keys(query).length > 0) {
         let separator = _url.indexOf('?') !== -1 ? '&' : '?';
         _url = `${_url}${separator}${this.toQueryString(query)}`;
       }
