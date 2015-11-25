@@ -1,10 +1,10 @@
 import Resource from './resource';
 
-export default class Customer extends Resource {
+export default class Charge extends Resource {
 
   constructor(payjp) {
     super(payjp);
-    this.resource = 'customers';
+    this.resource = 'charges';
   }
 
   list(query = {}) {
@@ -23,8 +23,12 @@ export default class Customer extends Resource {
     return this.request('POST', `${this.resource}/${id}`, query);
   }
 
-  delete(id) {
-    return this.request('DELETE', `${this.resource}/${id}`);
+  refund(id, query = {}) {
+    return this.request('POST', `${this.resource}/${id}/refund`, query);
+  }
+
+  capture(id, query = {}) {
+    return this.request('POST', `${this.resource}/${id}/capture`, query);
   }
 
 }

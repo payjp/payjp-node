@@ -11,10 +11,9 @@ describe('Customers Resource', () => {
   var _customer;
 
   describe('list', () => {
-    it('Sends the correct customer list request', () => {
+    it('Sends the correct request', () => {
       return payjp.customers.list().then((res) => {
         assert(res.count > 0);
-        // console.log(res);
       });
     });
   });
@@ -35,11 +34,9 @@ describe('Customers Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      const query = {
-        id: _customer.id
-      };
-      return payjp.customers.retrieve(query).then((res) => {
+      return payjp.customers.retrieve(_customer.id).then((res) => {
         assert.ok(res.id, _customer.id);
+        console.log(res);
       });
     });
   });
@@ -57,11 +54,8 @@ describe('Customers Resource', () => {
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      const query = {
-        id: _customer.id
-      };
-      return payjp.customers.delete(query).then((res) => {
-        assert.ok(res.deleted)
+      return payjp.customers.delete(_customer.id).then((res) => {
+        assert.ok(res.deleted);
         assert.equal(res.id, _customer.id);
       });
     });
