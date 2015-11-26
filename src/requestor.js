@@ -1,6 +1,6 @@
 /* global Buffer */
 
-import request from 'superagent';
+import r from 'superagent';
 
 export default class Requestor {
 
@@ -46,7 +46,7 @@ export default class Requestor {
       // console.log('body   => ', _query);
       // console.log('_url   => ', _url);
 
-      let _request = request(method, _url)
+      let _request = r(method, _url)
         .set(_headers)
       ;
 

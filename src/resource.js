@@ -28,34 +28,4 @@ export default class Resource {
     return obj;
   }
 
-  // list(query = {}) {
-  //   return Promise.resolve(
-  //     this.request('GET', this.resource, query)
-  //   ).then(this.payjplize);
-  // }
-
-  // retrieve(id) {
-  //   return Promise.resolve(
-  //     this.request('GET', `${this.resource}/${id}`)
-  //   ).then(this.payjplize);
-  // }
-
-  // create(query = {}) {
-  //   return Promise.resolve(
-  //     this.request('POST', this.resource, query)
-  //   ).then(this.payjplize);
-  // }
-
-  // update(id, query = {}) {
-  //   return Promise.resolve(
-  //     this.request('POST', `${this.resource}/${id}`, query)
-  //   ).then(this.payjplize);
-  // }
-
-  // delete(id) {
-  //   return Promise.resolve(
-  //     this.request('DELETE', `${this.resource}/${id}`)
-  //   ).then(this.payjplize);
-  // }
-
 }

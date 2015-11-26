@@ -1,3 +1,4 @@
+import Charge from './charge';
 import Customer from './customer';
 import Event from './event';
 import Transfer from './transfer';
@@ -12,6 +13,7 @@ export default class Payjp {
     this.apikey = apikey;
     this.config = this.makeConfig(config);
 
+    this.charges = new Charge(this);
     this.customers = new Customer(this);
     this.events = new Event(this);
     this.transfers = new Transfer(this);

@@ -13,6 +13,7 @@ globals:
   alert: false
   describe: false
   it: false
+  before: false
 
 arrowFunctions: true
 blockBindings: true
@@ -31,7 +32,7 @@ templateStrings: true
 rules:
   # ERRORS
   brace-style: [2, 1tbs, allowSingleLine: true]
-  camelcase: [2, properties: always]
+  camelcase: [0, properties: always]
   comma-style: [2, last]
   curly: [2, all]
   eol-last: 2

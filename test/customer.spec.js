@@ -6,7 +6,7 @@ const AUTH_KEY = 'sk_test_c62fade9d045b54cd76d7036';
 
 const payjp = new Payjp(AUTH_KEY);
 
-describe('Customers Resource', () => {
+describe('Customer Resource', () => {
 
   var _customer;
 
@@ -36,7 +36,6 @@ describe('Customers Resource', () => {
     it('Sends the correct request', () => {
       return payjp.customers.retrieve(_customer.id).then((res) => {
         assert.ok(res.id, _customer.id);
-        console.log(res);
       });
     });
   });
