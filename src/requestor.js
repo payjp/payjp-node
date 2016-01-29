@@ -4,8 +4,10 @@ import r from 'superagent';
 
 export default class Requestor {
 
-  constructor(apikey, apibase) {
+  constructor(apikey, host, port, apibase) {
     this.apikey = apikey;
+    this.host = host;
+    this.port = port;
     this.apibase = apibase;
   }
 
@@ -27,7 +29,7 @@ export default class Requestor {
       Authorization: `Basic ${encodedKey}`
     };
 
-    let _url = `https://stage-api.pay.jp/${this.apibase}/${endpoint}`;
+    let _url = `${this.host}/${this.apibase}/${endpoint}`;
 
     let _query;
 
@@ -48,6 +50,7 @@ export default class Requestor {
 
       let _request = r(method, _url)
         .set(_headers)
+        .set('port', this.port)
       ;
 
       if (method === 'GET') {

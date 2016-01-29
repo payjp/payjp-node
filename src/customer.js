@@ -1,7 +1,7 @@
 import Resource from './resource';
 import Card from './card';
 
-class Subscription extends Resource {
+class CustomerSubscription extends Resource {
 
   constructor(payjp) {
     super(payjp);
@@ -24,7 +24,7 @@ export default class Customer extends Resource {
     super(payjp);
     this.resource = 'customers';
     this.cards = new Card(payjp);
-    this.subscriptions = new Subscription(payjp);
+    this.subscriptions = new CustomerSubscription(payjp);
   }
 
   list(query = {}) {
