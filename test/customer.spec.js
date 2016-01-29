@@ -2,9 +2,9 @@ import assert from 'power-assert';
 
 import Payjp from '../src';
 
-const AUTH_KEY = 'sk_test_c62fade9d045b54cd76d7036';
+import config from './config';
 
-const payjp = new Payjp(AUTH_KEY);
+const payjp = new Payjp(config.auth_key, config);
 
 describe('Customer Resource', () => {
 

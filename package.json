@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers js:espower-babel/guess test/**/*.js"
+    "test": "./node_modules/.bin/mocha --timeout 5000 --compilers js:espower-babel/guess test/**/*.js"
   },
   "author": "",
   "license": "ISC",

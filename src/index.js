@@ -29,9 +29,7 @@ export default class Payjp {
 
   makeConfig(config) {
     return {
-      host: config.host || 'https://api.pay.jp',
-      port: config.port || 443,
-      apibase: config.apibase || 'v1'
+      apibase: config.apibase || 'https://api.pay.jp/v1'
     };
   }
 

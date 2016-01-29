@@ -2,11 +2,9 @@ import assert from 'power-assert';
 
 import Payjp from '../src';
 
-const AUTH_KEY = 'sk_test_c62fade9d045b54cd76d7036';
+import config from './config';
 
-const payjp = new Payjp(AUTH_KEY);
-
-// Subscriptions
+const payjp = new Payjp(config.auth_key, config);
 
 describe('Subscription Resource', () => {
 
@@ -122,6 +120,24 @@ describe('Subscription Resource', () => {
     it('Sends the correct request', () => {
       return payjp.subscriptions.cancel(_subscription.id).then((res) => {
         assert.equal(res.status, 'canceled');
+      });
+    });
+  });
+
+  describe('customer\'s subscription list', () => {
+    it('Sends the correct request', () => {
+      return payjp.customers.subscriptions.list(_customer.id).then((res) => {
+        assert(res.object === 'list');
+        assert(res.count === 1);
+      });
+    });
+  });
+
+  describe('customer\'s subscription retrieve', () => {
+    it('Sends the correct request', () => {
+      return payjp.customers.subscriptions.retrieve(_customer.id, _subscription.id).then((res) => {
+        assert(res.object === 'subscription');
+        assert(res.id === _subscription.id);
       });
     });
   });

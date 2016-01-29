@@ -6,14 +6,6 @@ export default class Resource {
     this.payjp = payjp;
   }
 
-  get host() {
-    return this.payjp.config.host;
-  }
-
-  get port() {
-    return this.payjp.config.port;
-  }
-
   get apibase() {
     return this.payjp.config.apibase;
   }
@@ -23,17 +15,8 @@ export default class Resource {
   }
 
   request(method, endpoint, query = {}) {
-    const requestor = new Requestor(
-      this.apikey, this.host, this.port, this.apibase
-    );
+    const requestor = new Requestor(this.apikey, this.apibase);
     return requestor.request(method, endpoint, query);
-  }
-
-  payjplize(obj) {
-    // for (let i = 0; i < obj.data.length; i++) {
-    //   obj.data[i].id = `payjp.${obj.data[i].id}`;
-    // }
-    return obj;
   }
 
 }
