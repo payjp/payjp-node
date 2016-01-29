@@ -1,34 +1,35 @@
-import Resource from './resource';
+import Charge from './charge';
 import Customer from './customer';
+import Plan from './plan';
+import Subscription from './subscription';
+import Token from './token';
+import Transfer from './transfer';
+import Event from './event';
+import Account from './account';
 
 export default class Payjp {
 
-  constructor(publicKey, config = {}) {
-    if (!publicKey) {
-      throw new Error('Please set publicKey.');
+  constructor(apikey, config = {}) {
+    if (!apikey) {
+      throw new Error('Please set apikey.');
     }
 
-    this.publicKey = publicKey;
-    this.config = config;
+    this.apikey = apikey;
+    this.config = this.makeConfig(config);
 
-    this.customers = new Customer();
+    this.charges = new Charge(this);
+    this.customers = new Customer(this);
+    this.plans = new Plan(this);
+    this.subscriptions = new Subscription(this);
+    this.tokens = new Token(this);
+    this.transfers = new Transfer(this);
+    this.events = new Event(this);
+    this.accounts = new Account(this);
   }
 
-  set publicKey(key) {
-    Resource.prototype._publicKey = key;
-  }
-
-  set config(config) {
-    const _config = {
-      host: config.host || 'api.pay.jp',
-      port: config.port || 443,
-      apibase: config.apibase || 'v1'
-    };
-
-    Resource.prototype.config = {
-      host: _config.host,
-      port: _config.port,
-      apibase: _config.apibase
+  makeConfig(config) {
+    return {
+      apibase: config.apibase || 'https://api.pay.jp/v1'
     };
   }
 

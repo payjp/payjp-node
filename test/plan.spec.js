@@ -6,13 +6,13 @@ import config from './config';
 
 const payjp = new Payjp(config.auth_key, config);
 
-describe('Customer Resource', () => {
+describe('Plans Resource', () => {
 
-  var _customer;
+  var _plan;
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.list().then((res) => {
+      return payjp.plans.list().then((res) => {
         assert(res.count > 0);
       });
     });
@@ -21,21 +21,25 @@ describe('Customer Resource', () => {
   describe('create', () => {
     it('Sends the correct request', () => {
       const query = {
-        email: 'payjp-node@example.com'
+        amount: 1000,
+        currency: 'jpy',
+        interval: 'month',
+        name: 'premium plan'
       };
-      return payjp.customers.create(query).then((res) => {
-        assert.equal(res.object, 'customer');
-        assert.equal(res.email, query.email);
+      return payjp.plans.create(query).then((res) => {
+        assert.equal(res.object, 'plan');
+        assert.equal(res.amount, query.amount);
+        assert.equal(res.name, query.name);
 
-        _customer = res;
+        _plan = res;
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.retrieve(_customer.id).then((res) => {
-        assert.ok(res.id, _customer.id);
+      return payjp.plans.retrieve(_plan.id).then((res) => {
+        assert.ok(res.id, _plan.id);
       });
     });
   });
@@ -43,19 +47,19 @@ describe('Customer Resource', () => {
   describe('update', () => {
     it('Sends the correct request', () => {
       const query = {
-        email: 'payjp-node-updated@example.com'
+        name: 'super hyper premium plan'
       };
-      return payjp.customers.update(_customer.id, query).then((res) => {
-        assert.equal(res.email, query.email);
+      return payjp.plans.update(_plan.id, query).then((res) => {
+        assert.equal(res.name, query.name);
       });
     });
   });
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.delete(_customer.id).then((res) => {
+      return payjp.plans.delete(_plan.id).then((res) => {
         assert.ok(res.deleted);
-        assert.equal(res.id, _customer.id);
+        assert.equal(res.id, _plan.id);
       });
     });
   });

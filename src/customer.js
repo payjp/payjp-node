@@ -1,30 +1,50 @@
 import Resource from './resource';
+import Card from './card';
+
+class CustomerSubscription extends Resource {
+
+  constructor(payjp) {
+    super(payjp);
+    this.resource = 'subscriptions';
+  }
+
+  list(customer_id, query = {}) {
+    return this.request('GET', `customers/${customer_id}/${this.resource}`, query);
+  }
+
+  retrieve(customer_id, id) {
+    return this.request('GET', `customers/${customer_id}/${this.resource}/${id}`);
+  }
+
+}
 
 export default class Customer extends Resource {
 
-  payjplize(obj) {
-    for (var i = 0; i < obj.data.length; i++) {
-      obj.data[i].id = `payjp.${obj.data[i].id}`;
-    }
-    return obj;
+  constructor(payjp) {
+    super(payjp);
+    this.resource = 'customers';
+    this.cards = new Card(payjp);
+    this.subscriptions = new CustomerSubscription(payjp);
   }
 
   list(query = {}) {
-    return Promise.resolve(
-      this.request('customers', 'GET', query)
-    ).then(this.payjplize);
-  }
-
-  retrieve(query = {}) {
-    return this.request(`customers/${query.id}`, 'GET', query);
+    return this.request('GET', this.resource, query);
   }
 
   create(query = {}) {
-    return this.request('customers', 'POST', query);
+    return this.request('POST', this.resource, query);
   }
 
-  update(query = {}) {
-    return this.request('customers', 'POST', query);
+  retrieve(id) {
+    return this.request('GET', `${this.resource}/${id}`);
+  }
+
+  update(id, query = {}) {
+    return this.request('POST', `${this.resource}/${id}`, query);
+  }
+
+  delete(id) {
+    return this.request('DELETE', `${this.resource}/${id}`);
   }
 
 }
