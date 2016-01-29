@@ -1,14 +1,23 @@
 {
-  "name": "payjp-node",
+  "name": "payjp",
   "version": "1.0.0",
-  "description": "",
+  "description": "PAY.JP node.js bindings",
   "main": "lib/index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --timeout 5000 --compilers js:espower-babel/guess test/**/*.js",
-    "build": "babel ./src --out-dir ./lib"
+    "build": "./node_modules/babel/bin/babel.js ./src --out-dir ./lib",
+    "lint": "./node_modules/eslint/bin/eslint.js src"
   },
-  "author": "",
+  "author": "PAY.JP <support@pay.jp> (https://pay.jp)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/payjp/payjp-node.git"
+  },
   "license": "ISC",
+  "devEngines": {
+    "node": "4.x || 5.x",
+    "npm": "2.x || 3.x"
+  },
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-core": "^5.8.25",
@@ -19,9 +28,13 @@
     "gulp": "^3.9.0",
     "mocha": "^2.3.3",
     "power-assert": "^1.1.0",
+    "pre-commit": "^1.1.2",
     "webpack": "^1.12.2"
   },
   "dependencies": {
     "superagent": "^1.4.0"
-  }
+  },
+  "pre-commit": [
+    "lint"
+  ]
 }

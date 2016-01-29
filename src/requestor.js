@@ -26,9 +26,7 @@ export default class Requestor {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`
     };
-
     let _url = `${this.apibase}/${endpoint}`;
-
     let _query;
 
     if (method === 'GET') {
@@ -42,9 +40,6 @@ export default class Requestor {
     }
 
     return new Promise((resolve, reject) => {
-      // console.log('header => ', _headers);
-      // console.log('body   => ', _query);
-      // console.log('_url   => ', _url);
 
       let _request = r(method, _url)
         .set(_headers)
