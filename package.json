@@ -2,9 +2,10 @@
   "name": "payjp-node",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --timeout 5000 --compilers js:espower-babel/guess test/**/*.js"
+    "test": "./node_modules/.bin/mocha --timeout 5000 --compilers js:espower-babel/guess test/**/*.js",
+    "build": "babel ./src --out-dir ./lib"
   },
   "author": "",
   "license": "ISC",
