@@ -15,4 +15,8 @@ export default class Transfer extends Resource {
     return this.request('GET', `${this.resource}/${id}`);
   }
 
+  charges(id, query = {}) {
+    return this.request('GET', `${this.resource}/${id}/charges`, query);
+  }
+
 }
