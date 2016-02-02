@@ -1,5 +1,6 @@
 import assert from 'power-assert';
 
+import Requestor from '../src/requestor';
 import Payjp from '../src';
 
 import config from './config';
@@ -8,21 +9,31 @@ const payjp = new Payjp(config.auth_key, config);
 
 describe('Events Resource', () => {
 
-  var _event;
+  var _method;
+  var _endpoint;
+
+  before(() => {
+    Requestor.prototype.request = (...args) => {
+      _method = args[0];
+      _endpoint = args[1];
+      return Promise.resolve();
+    };
+  });
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.events.list().then((res) => {
-        assert(res.count > 0);
-        _event = res.data[0];
+      return payjp.events.list().then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'events');
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.events.retrieve(_event.id).then((res) => {
-        assert.ok(res.id, _event.id);
+      return payjp.events.retrieve('id123').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'events/id123');
       });
     });
   });

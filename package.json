@@ -4,7 +4,7 @@
   "description": "PAY.JP node.js bindings",
   "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --timeout 5000 --compilers js:espower-babel/guess test/**/*.js",
+    "test": "./node_modules/.bin/mocha --compilers js:espower-babel/guess test/**/*.js",
     "build": "./node_modules/babel/bin/babel.js ./src --out-dir ./lib",
     "lint": "./node_modules/eslint/bin/eslint.js src"
   },
