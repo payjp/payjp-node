@@ -1,6 +1,6 @@
 /* global Buffer */
 
-import r from 'superagent';
+import superagent from 'superagent';
 
 export default class Requestor {
 
@@ -9,57 +9,55 @@ export default class Requestor {
     this.apibase = apibase;
   }
 
-  toQueryString(obj) {
-    let str = [];
-    for (let p in obj) {
-      if (obj.hasOwnProperty(p) && obj[p] !== null) {
-        str.push(`${encodeURIComponent(p)}=${encodeURIComponent(obj[p])}`);
-      }
-    }
-    return str.join('&');
-  }
-
-  request(method, endpoint, query = {}) {
+  buildHeader(method) {
     const encodedKey = new Buffer(`${this.apikey}:`).toString('base64');
 
-    let _headers = {
+    let headers = {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`
     };
-    let _url = `${this.apibase}/${endpoint}`;
-    let _query;
+
+    if (method === 'POST') {
+      headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    }
+
+    return headers;
+  }
+
+  buildRequest(method, url, header, query) {
+    let request = superagent(method, url).set(header);
 
     if (method === 'GET') {
-      if (Object.keys(query).length > 0) {
-        let separator = _url.indexOf('?') !== -1 ? '&' : '?';
-        _url = `${_url}${separator}${this.toQueryString(query)}`;
-      }
+      request.query(query);
     } else if (method === 'POST') {
-      _headers['Content-Type'] = 'application/x-www-form-urlencoded';
-      _query = query;
+      request.send(query);
     }
+
+    return request;
+  }
+
+  request(method, endpoint, query = {}) {
+    let url = `${this.apibase}/${endpoint}`;
+
+    const header = this.buildHeader(method);
 
     return new Promise((resolve, reject) => {
 
-      let _request = r(method, _url)
-        .set(_headers)
-      ;
+      let request = superagent(method, url).set(header);
 
       if (method === 'GET') {
-        _request.query(_query);
+        request.query(query);
       } else if (method === 'POST') {
-        _request.send(_query);
+        request.send(query);
       }
 
-      _request
-        .end((err, res) => {
-          if (res.statusCode === 200) {
-            resolve(res.body);
-          } else {
-            reject(err);
-          }
-        })
-      ;
+      request.end((err, res) => {
+        if (res.statusCode === 200) {
+          resolve(res.body);
+        } else {
+          reject(err);
+        }
+      });
 
     });
 
