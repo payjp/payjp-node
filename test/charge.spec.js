@@ -1,5 +1,6 @@
 import assert from 'power-assert';
 
+import Requestor from '../src/requestor';
 import Payjp from '../src';
 
 import config from './config';
@@ -8,12 +9,22 @@ const payjp = new Payjp(config.auth_key, config);
 
 describe('Charges Resource', () => {
 
-  var _charge;
+  var _method;
+  var _endpoint;
+
+  before(() => {
+    Requestor.prototype.request = (...args) => {
+      _method = args[0];
+      _endpoint = args[1];
+      return Promise.resolve();
+    };
+  });
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.charges.list().then((res) => {
-        assert(res.count > 0);
+      return payjp.charges.list().then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'charges');
       });
     });
   });
@@ -30,20 +41,18 @@ describe('Charges Resource', () => {
         },
         capture: false
       };
-      return payjp.charges.create(query).then((res) => {
-        assert.equal(res.object, 'charge');
-        assert.equal(res.email, query.email);
-        assert(res.captured === false);
-
-        _charge = res;
+      return payjp.charges.create(query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'charges');
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.charges.retrieve(_charge.id).then((res) => {
-        assert.ok(res.id, _charge.id);
+      return payjp.charges.retrieve('id123').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'charges/id123');
       });
     });
   });
@@ -53,8 +62,9 @@ describe('Charges Resource', () => {
       const query = {
         description: 'oppai'
       };
-      return payjp.charges.update(_charge.id, query).then((res) => {
-        assert.equal(res.description, query.description);
+      return payjp.charges.update('id123', query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'charges/id123');
       });
     });
   });
@@ -64,8 +74,9 @@ describe('Charges Resource', () => {
       const query = {
         amount: 700
       };
-      return payjp.charges.capture(_charge.id, query).then((res) => {
-        assert.equal(res.amount - res.amount_refunded, query.amount);
+      return payjp.charges.capture('id123', query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'charges/id123/capture');
       });
     });
   });
@@ -75,8 +86,9 @@ describe('Charges Resource', () => {
       const query = {
         refund_reason: 'no oppai' // eslint-disable-line camelcase
       };
-      return payjp.charges.refund(_charge.id, query).then((res) => {
-        assert.equal(res.refund_reason, query.refund_reason);
+      return payjp.charges.refund('id123', query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'charges/id123/refund');
       });
     });
   });
