@@ -24,21 +24,12 @@ export default class Requestor {
     return headers;
   }
 
-  buildRequest(method, url, header, query) {
-    let request = superagent(method, url).set(header);
-
-    if (method === 'GET') {
-      request.query(query);
-    } else if (method === 'POST') {
-      request.send(query);
-    }
-
-    return request;
+  buildUrl(endpoint) {
+    return `${this.apibase}/${endpoint}`;
   }
 
   request(method, endpoint, query = {}) {
-    let url = `${this.apibase}/${endpoint}`;
-
+    const url = this.buildUrl(endpoint);
     const header = this.buildHeader(method);
 
     return new Promise((resolve, reject) => {
