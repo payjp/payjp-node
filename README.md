@@ -88,7 +88,7 @@ client.tokens.create(query = {})
 client.tokens.retrieve(id)
 ```
 
-### Token
+### Transfer
 
 ```js
 client.transfers.list(query = {})
