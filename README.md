@@ -99,8 +99,8 @@ client.transfers.charges(id, query = {})
 ### Event
 
 ```js
-client.events.retrieve(customer_id, card_id)
-client.events.list(customer_id, query = {})
+client.events.retrieve(id)
+client.events.list(query = {})
 ```
 
 ### Account
