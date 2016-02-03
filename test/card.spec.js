@@ -1,5 +1,6 @@
 import assert from 'power-assert';
 
+import Requestor from '../src/requestor';
 import Payjp from '../src';
 
 import config from './config';
@@ -8,18 +9,15 @@ const payjp = new Payjp(config.auth_key, config);
 
 describe('Cards Resource', () => {
 
-  var _customer;
-  var _card;
+  var _method;
+  var _endpoint;
 
-  before((done) => {
-    const query = {
-      email: 'payjp-node@example.com'
+  before(() => {
+    Requestor.prototype.request = (...args) => {
+      _method = args[0];
+      _endpoint = args[1];
+      return Promise.resolve();
     };
-    payjp.customers.create(query).then((res) => {
-      assert.equal(res.object, 'customer');
-      _customer = res;
-    })
-    .then(done);
   });
 
   describe('create', () => {
@@ -29,27 +27,27 @@ describe('Cards Resource', () => {
         exp_month: 12,
         exp_year: 2035,
       };
-      return payjp.customers.cards.create(_customer.id, query).then((res) => {
-        assert.equal(res.object, 'card');
-        assert.equal(res.last4, String(query.number).substr(-4));
-
-        _card = res;
+      return payjp.customers.cards.create('cus_id123', query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'customers/cus_id123/cards');
       });
     });
   });
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.cards.list(_customer.id).then((res) => {
-        assert(res.count > 0);
+      return payjp.customers.cards.list('cus_id123').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'customers/cus_id123/cards');
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.cards.retrieve(_customer.id, _card.id).then((res) => {
-        assert.ok(res.id, _card.id);
+      return payjp.customers.cards.retrieve('cus_id123', 'id456').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'customers/cus_id123/cards/id456');
       });
     });
   });
@@ -59,17 +57,18 @@ describe('Cards Resource', () => {
       const query = {
         address_state: 'tokyo'
       };
-      return payjp.customers.cards.update(_customer.id, _card.id, query).then((res) => {
-        assert.equal(res.address_state, query.address_state);
+      return payjp.customers.cards.update('cus_id123', 'id456', query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'customers/cus_id123/cards/id456');
       });
     });
   });
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.cards.delete(_customer.id, _card.id).then((res) => {
-        assert.ok(res.deleted);
-        assert.equal(res.id, _card.id);
+      return payjp.customers.cards.delete('cus_id123', 'id456').then(() => {
+        assert(_method === 'DELETE');
+        assert(_endpoint === 'customers/cus_id123/cards/id456');
       });
     });
   });

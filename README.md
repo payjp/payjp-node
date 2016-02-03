@@ -2,9 +2,17 @@
 
 ## Installation
 
+```
 npm install --save payjp
+```
+
+## Dependencies
+
+- superagent
 
 ## Documentation
+
+* [API Documentation](https://pay.jp/docs/api/)
 
 ### Example
 
@@ -100,7 +108,3 @@ client.events.list(customer_id, query = {})
 ```js
 client.accounts.retrieve()
 ```
-
-## Dependencies
-
-- superagent

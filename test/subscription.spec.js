@@ -1,5 +1,6 @@
 import assert from 'power-assert';
 
+import Requestor from '../src/requestor';
 import Payjp from '../src';
 
 import config from './config';
@@ -8,60 +9,22 @@ const payjp = new Payjp(config.auth_key, config);
 
 describe('Subscription Resource', () => {
 
-  var _customer;
-  var _plan1;
-  var _plan2;
-  var _subscription;
+  var _method;
+  var _endpoint;
 
-  before((done) => {
-    const card_query = {
-      number: 4242424242424242,
-      exp_month: 12,
-      exp_year: 2035,
+  before(() => {
+    Requestor.prototype.request = (...args) => {
+      _method = args[0];
+      _endpoint = args[1];
+      return Promise.resolve();
     };
-    const customer_query = {
-      email: 'payjp-node@example.com'
-    };
-    const plan_query_1 = {
-      amount: 1000,
-      currency: 'jpy',
-      interval: 'month',
-      name: process.hrtime().join('')
-    };
-    const plan_query_2 = {
-      amount: 2000,
-      currency: 'jpy',
-      interval: 'month',
-      name: process.hrtime().join('')
-    };
-
-    Promise.all([
-      payjp.customers.create(customer_query).then((res) => {
-        assert.equal(res.object, 'customer');
-        _customer = res;
-      }),
-      payjp.plans.create(plan_query_1).then((res) => {
-        assert.equal(res.object, 'plan');
-        _plan1 = res;
-      }),
-      payjp.plans.create(plan_query_2).then((res) => {
-        assert.equal(res.object, 'plan');
-        _plan2 = res;
-      })
-    ])
-    .then(() => {
-      payjp.customers.cards.create(_customer.id, card_query).then((res) => {
-        assert.equal(res.object, 'card');
-      }).then(() => {
-        done();
-      });
-    });
   });
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.subscriptions.list().then((res) => {
-        assert.equal(res.object, 'list');
+      return payjp.subscriptions.list().then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'subscriptions');
       });
     });
   });
@@ -69,13 +32,12 @@ describe('Subscription Resource', () => {
   describe('create', () => {
     it('Sends the correct request', () => {
       const query = {
-        customer: _customer.id,
-        plan: _plan1.id
+        customer: 'cus_id456',
+        plan: 'pln_id789'
       };
-      return payjp.subscriptions.create(query).then((res) => {
-        assert.equal(res.object, 'subscription');
-        assert.equal(res.plan.id, _plan1.id);
-        _subscription = res;
+      return payjp.subscriptions.create(query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'subscriptions');
       });
     });
   });
@@ -83,70 +45,74 @@ describe('Subscription Resource', () => {
   describe('update', () => {
     it('Sends the correct request', () => {
       const query = {
-        plan: _plan2.id
+        plan: 'pln_id789'
       };
-      return payjp.subscriptions.update(_subscription.id, query).then((res) => {
-        assert.equal(res.object, 'subscription');
-        assert.equal(res.plan.id, _plan2.id);
+      return payjp.subscriptions.update('id123', query).then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'subscriptions/id123');
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.subscriptions.retrieve(_subscription.id).then((res) => {
-        assert.equal(res.id, _subscription.id);
+      return payjp.subscriptions.retrieve('id123').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'subscriptions/id123');
       });
     });
   });
 
   describe('pause', () => {
     it('Sends the correct request', () => {
-      return payjp.subscriptions.pause(_subscription.id).then((res) => {
-        assert.equal(res.status, 'paused');
+      return payjp.subscriptions.pause('id123').then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'subscriptions/id123/pause');
       });
     });
   });
 
   describe('resume', () => {
     it('Sends the correct request', () => {
-      return payjp.subscriptions.resume(_subscription.id).then((res) => {
-        assert.equal(res.status, 'active');
+      return payjp.subscriptions.resume('id123').then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'subscriptions/id123/resume');
       });
     });
   });
 
   describe('cancel', () => {
     it('Sends the correct request', () => {
-      return payjp.subscriptions.cancel(_subscription.id).then((res) => {
-        assert.equal(res.status, 'canceled');
+      return payjp.subscriptions.cancel('id123').then(() => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'subscriptions/id123/cancel');
       });
     });
   });
 
   describe('customer\'s subscription list', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.subscriptions.list(_customer.id).then((res) => {
-        assert(res.object === 'list');
-        assert(res.count === 1);
+      return payjp.customers.subscriptions.list('cus_id456').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'customers/cus_id456/subscriptions');
       });
     });
   });
 
   describe('customer\'s subscription retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.subscriptions.retrieve(_customer.id, _subscription.id).then((res) => {
-        assert(res.object === 'subscription');
-        assert(res.id === _subscription.id);
+      return payjp.customers.subscriptions.retrieve('cus_id456', 'id123').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'customers/cus_id456/subscriptions/id123');
       });
     });
   });
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return payjp.subscriptions.delete(_subscription.id).then((res) => {
-        assert.equal(res.id, _subscription.id);
-        assert(res.deleted);
+      return payjp.subscriptions.delete('id123').then(() => {
+        assert(_method === 'DELETE');
+        assert(_endpoint === 'subscriptions/id123');
       });
     });
   });
