@@ -1,6 +1,6 @@
 {
   "name": "payjp",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "PAY.JP node.js bindings",
   "main": "lib/index.js",
   "keywords": [
@@ -23,10 +23,6 @@
   "contributors": [
     "Yoichi Fujimoto <wozozo@gmail.com>"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/payjp/payjp-node.git"
-  },
   "license": "MIT",
   "devEngines": {
     "node": "4.x || 5.x",
