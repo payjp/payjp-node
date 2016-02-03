@@ -1,14 +1,28 @@
 {
   "name": "payjp",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "PAY.JP node.js bindings",
   "main": "lib/index.js",
+  "keywords": [
+    "PAY.JP",
+    "payment processing",
+    "credit cards",
+    "api"
+  ],
   "scripts": {
     "test": "./node_modules/.bin/mocha --compilers js:espower-babel/guess test/**/*.js",
     "build": "./node_modules/babel/bin/babel.js ./src --out-dir ./lib",
-    "lint": "./node_modules/eslint/bin/eslint.js src"
+    "lint": "./node_modules/eslint/bin/eslint.js src",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/payjp/payjp-node.git"
   },
   "author": "PAY.JP <support@pay.jp> (https://pay.jp)",
+  "contributors": [
+    "Yoichi Fujimoto <wozozo@gmail.com>"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/payjp/payjp-node.git"
