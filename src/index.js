@@ -7,30 +7,31 @@ import Transfer from './transfer';
 import Event from './event';
 import Account from './account';
 
-export default class Payjp {
-
-  constructor(apikey, config = {}) {
-    if (!apikey) {
-      throw new Error('Please set apikey.');
-    }
-
-    this.apikey = apikey;
-    this.config = this.makeConfig(config);
-
-    this.charges = new Charge(this);
-    this.customers = new Customer(this);
-    this.plans = new Plan(this);
-    this.subscriptions = new Subscription(this);
-    this.tokens = new Token(this);
-    this.transfers = new Transfer(this);
-    this.events = new Event(this);
-    this.accounts = new Account(this);
-  }
-
-  makeConfig(config) {
+function __initialize(obj, apikey, config) {
+  obj.apikey = apikey;
+  obj.config = ((_) => {
     return {
-      apibase: config.apibase || 'https://api.pay.jp/v1'
+      apibase: _.apibase || 'https://api.pay.jp/v1'
     };
+  })(config);
+
+  obj.charges = new Charge(obj);
+  obj.customers = new Customer(obj);
+  obj.plans = new Plan(obj);
+  obj.subscriptions = new Subscription(obj);
+  obj.tokens = new Token(obj);
+  obj.transfers = new Transfer(obj);
+  obj.events = new Event(obj);
+  obj.accounts = new Account(obj);
+
+  return obj;
+}
+
+export default function Payjp(apikey, config = {}) {
+
+  if (!apikey) {
+    throw new Error('Please set apikey.');
   }
 
+  return __initialize({}, apikey, config);
 }
