@@ -36,9 +36,9 @@ export default class Requestor {
 
       let request = superagent(method, url).set(header);
 
-      if (method === 'GET') {
+      if (method === 'GET' || method === 'DELETE') {
         request.query(query);
-      } else if (method === 'POST') {
+      } else if (method === 'POST' || method === 'PUT') {
         request.send(query);
       }
 
