@@ -4,9 +4,10 @@ import superagent from 'superagent';
 
 export default class Requestor {
 
-  constructor(apikey, apibase) {
+  constructor(apikey, apibase, config) {
     this.apikey = apikey;
     this.apibase = apibase;
+    this.config = config;
   }
 
   buildHeader(method) {
@@ -40,6 +41,10 @@ export default class Requestor {
         request.query(query);
       } else if (method === 'POST' || method === 'PUT') {
         request.send(query);
+      }
+
+      if (this.config.cert !== null) {
+        request.ca(this.config.cert);
       }
 
       request.end((err, res) => {
