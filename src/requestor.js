@@ -1,6 +1,5 @@
 /* global Buffer */
 
-import * as fs from "fs";
 import superagent from 'superagent';
 
 export default class Requestor {
@@ -45,8 +44,7 @@ export default class Requestor {
       }
 
       if (this.config.cert !== null) {
-        const ca = fs.readFileSync(this.config.cert);
-        request.ca(ca);
+        request.ca(this.config.cert);
       }
 
       request.end((err, res) => {
