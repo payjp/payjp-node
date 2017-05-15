@@ -35,8 +35,8 @@ export default class Subscription extends Resource {
     return this.request('POST', `${this.resource}/${id}/cancel`);
   }
 
-  delete(id) {
-    return this.request('DELETE', `${this.resource}/${id}`);
+  delete(id, query = {}) {
+    return this.request('DELETE', `${this.resource}/${id}`, query);
   }
 
 }

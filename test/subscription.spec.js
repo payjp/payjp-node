@@ -11,11 +11,15 @@ describe('Subscription Resource', () => {
 
   var _method;
   var _endpoint;
+  var _query;
 
   before(() => {
     Requestor.prototype.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
+      if (Object.keys(args).length > 2) {
+        _query = args[2];
+      }
       return Promise.resolve();
     };
   });
@@ -110,9 +114,13 @@ describe('Subscription Resource', () => {
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return payjp.subscriptions.delete('id123').then(() => {
+      const query = {
+        prorate: true
+      };
+      return payjp.subscriptions.delete('id123', query).then(() => {
         assert(_method === 'DELETE');
         assert(_endpoint === 'subscriptions/id123');
+        assert(_query === query);
       });
     });
   });
