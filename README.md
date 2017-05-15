@@ -93,7 +93,7 @@ payjp.subscriptions.list(query = {})
 payjp.subscriptions.pause(id)
 payjp.subscriptions.resume(id, query = {})
 payjp.subscriptions.cancel(id)
-payjp.subscriptions.delete(id)
+payjp.subscriptions.delete(id, query = {})
 payjp.customers.subscriptions.list(customer_id, query = {})
 payjp.customers.subscriptions.retrieve(customer_id, subscription_id)
 ```
