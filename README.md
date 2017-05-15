@@ -26,6 +26,21 @@ Promise.resolve(payjp.customers.list()).then((r) => {
 });
 ```
 
+#### Options
+
+Options can be specified in the constructor.
+
+* Cert
+
+You can specify the certificate to be used for the request.
+
+```js
+const options = {
+  cert: 'path/to/ca-certificates.crt'
+}
+const payjp = require('payjp')('sk_...', options);
+```
+
 ### Charge
 
 ```js
