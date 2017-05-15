@@ -15,7 +15,7 @@ export default class Resource {
   }
 
   request(method, endpoint, query = {}) {
-    const requestor = new Requestor(this.apikey, this.apibase);
+    const requestor = new Requestor(this.apikey, this.apibase, this.payjp.config);
     return requestor.request(method, endpoint, query);
   }
 

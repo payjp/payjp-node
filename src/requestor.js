@@ -1,12 +1,14 @@
 /* global Buffer */
 
+import * as fs from "fs";
 import superagent from 'superagent';
 
 export default class Requestor {
 
-  constructor(apikey, apibase) {
+  constructor(apikey, apibase, config) {
     this.apikey = apikey;
     this.apibase = apibase;
+    this.config = config;
   }
 
   buildHeader(method) {
@@ -40,6 +42,11 @@ export default class Requestor {
         request.query(query);
       } else if (method === 'POST' || method === 'PUT') {
         request.send(query);
+      }
+
+      if (this.config.cert !== null) {
+        const ca = fs.readFileSync(this.config.cert);
+        request.ca(ca);
       }
 
       request.end((err, res) => {

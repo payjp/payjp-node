@@ -11,7 +11,8 @@ function __initialize(obj, apikey, config) {
   obj.apikey = apikey;
   obj.config = ((_) => {
     return {
-      apibase: _.apibase || 'https://api.pay.jp/v1'
+      apibase: _.apibase || 'https://api.pay.jp/v1',
+      cert: _.cert || null
     };
   })(config);
 
