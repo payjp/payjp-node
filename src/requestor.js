@@ -11,7 +11,7 @@ export default class Requestor {
   }
 
   buildHeader(method) {
-    const encodedKey = new Buffer(`${this.apikey}:`).toString('base64');
+    const encodedKey = Buffer.from(`${this.apikey}:`).toString('base64');
 
     let headers = {
       Accept: 'application/json',
