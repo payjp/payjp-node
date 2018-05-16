@@ -21,8 +21,15 @@ npm install --save payjp
 
 ```js
 const payjp = require('payjp')('sk_test_c62fade9d045b54cd76d7036');
-Promise.resolve(payjp.customers.list()).then((r) => {
-  console.log(r);
+const charge = await payjp.charges.create({
+  amount: 1000,
+  currency: 'jpy',
+  card: {
+    number: 4242424242424242,
+    exp_month: 12,
+    exp_year: 2020,
+  },
+  capture: true
 });
 ```
 
