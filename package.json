@@ -38,7 +38,6 @@
     "babel-preset-es2015": "^6.3.13",
     "eslint": "^3.19.0",
     "espower-babel": "^4.0.1",
-    "gulp": "^3.9.0",
     "mocha": "^3.3.0",
     "power-assert": "^1.1.0",
     "pre-commit": "^1.1.2"
