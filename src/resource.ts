@@ -1,20 +1,26 @@
 import Requestor from './requestor';
 
-export default class Resource {
+interface ResourceInterface {
+  payjp: any;
+}
 
-  constructor(payjp) {
+export default class Resource implements ResourceInterface {
+
+  payjp: any
+
+  constructor(payjp: any) {
     this.payjp = payjp;
   }
 
-  get apibase() {
+  get apibase(): string {
     return this.payjp.config.apibase;
   }
 
-  get apikey() {
+  get apikey(): string {
     return this.payjp.apikey;
   }
 
-  request(method, endpoint, query = {}, headers = {}) {
+  request(method: string, endpoint: string, query = {}, headers: object = {}): object {
     const requestor = new Requestor(this.apikey, this.apibase, this.payjp.config);
     return requestor.request(method, endpoint, query, headers);
   }

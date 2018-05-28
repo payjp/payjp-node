@@ -1,7 +1,7 @@
 import assert from 'power-assert';
 
-import Requestor from '../src/requestor';
-import Payjp from '../src';
+import Requestor from '../built/requestor';
+import Payjp from '../built';
 
 import config from './config';
 

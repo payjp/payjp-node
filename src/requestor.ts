@@ -1,19 +1,22 @@
 /* global Buffer */
 
-import superagent from 'superagent';
+import * as superagent from 'superagent';
 
 export default class Requestor {
+  apikey: string;
+  apibase: string;
+  config: any;
 
-  constructor(apikey, apibase, config) {
+  constructor(apikey: string, apibase: string, config: any = {}) {
     this.apikey = apikey;
     this.apibase = apibase;
     this.config = config;
   }
 
-  buildHeader(method) {
+  buildHeader(method: string): object {
     const encodedKey = Buffer.from(`${this.apikey}:`).toString('base64');
 
-    let headers = {
+    const headers = {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`
     };
@@ -25,16 +28,16 @@ export default class Requestor {
     return headers;
   }
 
-  buildUrl(endpoint) {
+  buildUrl(endpoint: string): string {
     return `${this.apibase}/${endpoint}`;
   }
 
-  request(method, endpoint, query = {}, headers = {}) {
+  request(method: string, endpoint: string, query: object = {}, headers: object = {}): Promise<any> {
     const url = this.buildUrl(endpoint);
     const fixed_header = this.buildHeader(method);
     const header = Object.assign(fixed_header, headers);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject): any => {
 
       let request = superagent(method, url).set(header);
 
@@ -48,11 +51,11 @@ export default class Requestor {
         request.ca(this.config.cert);
       }
 
-      request.end((err, res) => {
-        if (res.statusCode === 200) {
+      request.end((err: any, res: superagent.Response) => {
+        if (res.status === 200) {
           resolve(res.body);
         } else {
-          reject(err);
+          reject(res);
         }
       });
 
