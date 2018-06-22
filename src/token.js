@@ -7,8 +7,8 @@ export default class Token extends Resource {
     this.resource = 'tokens';
   }
 
-  create(query = {}) {
-    return this.request('POST', this.resource, query);
+  create(query = {}, headers = {}) {
+    return this.request('POST', this.resource, query, headers);
   }
 
   retrieve(id) {

@@ -14,9 +14,9 @@ export default class Resource {
     return this.payjp.apikey;
   }
 
-  request(method, endpoint, query = {}) {
+  request(method, endpoint, query = {}, headers = {}) {
     const requestor = new Requestor(this.apikey, this.apibase, this.payjp.config);
-    return requestor.request(method, endpoint, query);
+    return requestor.request(method, endpoint, query, headers);
   }
 
 }
