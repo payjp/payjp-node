@@ -29,9 +29,10 @@ export default class Requestor {
     return `${this.apibase}/${endpoint}`;
   }
 
-  request(method, endpoint, query = {}) {
+  request(method, endpoint, query = {}, headers = {}) {
     const url = this.buildUrl(endpoint);
-    const header = this.buildHeader(method);
+    const fixed_header = this.buildHeader(method);
+    const header = Object.assign(fixed_header, headers);
 
     return new Promise((resolve, reject) => {
 
