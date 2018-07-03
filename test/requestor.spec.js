@@ -2,7 +2,7 @@
 
 import assert from 'power-assert';
 
-import Requestor from '../src/requestor';
+import Requestor from '../built/requestor';
 
 describe('HTTP Requestor', () => {
 

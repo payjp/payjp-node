@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es6", "dom"],
+    "allowSyntheticDefaultImports": true,
+    "declaration": true
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

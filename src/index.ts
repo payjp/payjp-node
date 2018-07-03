@@ -9,7 +9,20 @@ import Transfer from './transfer';
 import Event from './event';
 import Account from './account';
 
-function __initialize(obj, apikey, config) {
+interface Payjp {
+  charges: Charge;
+  customers: Customer;
+  plans: Plan;
+  subscriptions: Subscription;
+  tokens: Token;
+  transfers: Transfer;
+  events: Event;
+  accounts: Account;
+}
+
+function __initialize(apikey: string, config: { apibase?: string, cert?: string}): Payjp {
+  const obj: any = {};
+
   obj.apikey = apikey;
   obj.config = ((_) => {
     return {
@@ -34,11 +47,11 @@ function __initialize(obj, apikey, config) {
   return obj;
 }
 
-export default function Payjp(apikey, config = {}) {
+export default function Payjp(apikey: string, config = {}): Payjp {
 
   if (!apikey) {
     throw new Error('Please set apikey.');
   }
 
-  return __initialize({}, apikey, config);
+  return __initialize(apikey, config);
 }
