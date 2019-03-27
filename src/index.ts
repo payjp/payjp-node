@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import fs = require('fs');
 
 import Charge from './charge';
 import Customer from './customer';
@@ -47,7 +47,7 @@ function __initialize(apikey: string, config: { apibase?: string, cert?: string}
   return obj;
 }
 
-export default function Payjp(apikey: string, config = {}): Payjp {
+export = function Payjp(apikey: string, config = {}): Payjp {
 
   if (!apikey) {
     throw new Error('Please set apikey.');
