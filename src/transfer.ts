@@ -1,8 +1,8 @@
 import Resource from './resource';
 
-import { TransferResponse } from './interfaces';
+import * as I from './index';
 
-export default class Transfer extends Resource {
+export default class Transfers extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -10,15 +10,15 @@ export default class Transfer extends Resource {
     this.resource = 'transfers';
   }
 
-  list(query = {}) {
-    return this.request('GET', this.resource, query) as TransferResponse[];
+  list(query: I.TransferListOptions = {}): Promise<I.List<I.Transfer>> {
+    return this.request('GET', this.resource, query);
   }
 
-  retrieve(id) {
-    return this.request('GET', `${this.resource}/${id}`) as TransferResponse;
+  retrieve(id): Promise<I.Transfer> {
+    return this.request('GET', `${this.resource}/${id}`);
   }
 
-  charges(id, query = {}) {
+  charges(id, query: I.TransferChargeListOptions = {}): Promise<I.List<I.Charge>> {
     return this.request('GET', `${this.resource}/${id}/charges`, query);
   }
 

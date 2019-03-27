@@ -1,7 +1,7 @@
 import Resource from './resource';
-import { EventResponse } from './interfaces';
+import * as I from './index';
 
-export default class Event extends Resource {
+export default class Events extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -9,12 +9,12 @@ export default class Event extends Resource {
     this.resource = 'events';
   }
 
-  list(query: object = {}) {
-    return this.request('GET', this.resource, query) as EventResponse[];
+  list(query: I.PayjpEventListRequest = {}): Promise<I.List<I.Event>> {
+    return this.request('GET', this.resource, query);
   }
 
-  retrieve(id: string) {
-    return this.request('GET', `${this.resource}/${id}`) as EventResponse;
+  retrieve(id: string): Promise<I.Event> {
+    return this.request('GET', `${this.resource}/${id}`);
   }
 
 }

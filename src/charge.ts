@@ -1,7 +1,7 @@
 import Resource from './resource';
-import { ChargeResponse } from './interfaces';
+import * as I from './index';
 
-export default class Charge extends Resource {
+export default class Charges extends Resource {
 
   resource: string;
 
@@ -10,28 +10,32 @@ export default class Charge extends Resource {
     this.resource = 'charges';
   }
 
-  list(query = {}) {
-    return this.request('GET', this.resource, query) as ChargeResponse[];
+  list(query: I.ChargeListOptions = {}): Promise<I.List<I.Charge>> {
+    return this.request('GET', this.resource, query);
   }
 
-  create(query = {}) {
-    return this.request('POST', this.resource, query) as ChargeResponse;
+  create(query: I.ChargeCreationOptions): Promise<I.Charge> {
+    return this.request('POST', this.resource, query);
   }
 
-  retrieve(id) {
-    return this.request('GET', `${this.resource}/${id}`) as ChargeResponse;
+  retrieve(id): Promise<I.Charge> {
+    return this.request('GET', `${this.resource}/${id}`);
   }
 
-  update(id, query = {}) {
-    return this.request('POST', `${this.resource}/${id}`, query) as ChargeResponse;
+  update(id, query: I.ChargeUpdateOptions = {}): Promise<I.Charge> {
+    return this.request('POST', `${this.resource}/${id}`, query);
   }
 
-  refund(id, query = {}) {
-    return this.request('POST', `${this.resource}/${id}/refund`, query) as ChargeResponse;
+  refund(id, query: I.RefundCreationOptions = {}): Promise<I.Charge> {
+    return this.request('POST', `${this.resource}/${id}/refund`, query);
   }
 
-  capture(id, query = {}) {
-    return this.request('POST', `${this.resource}/${id}/capture`, query) as ChargeResponse;
+  reauth(id, query: I.ChargeReauthOptions = {}): Promise<I.Charge> {
+    return this.request('POST', `${this.resource}/${id}/reauth`, query);
+  }
+
+  capture(id, query: I.ChargeCaptureOptions = {}): Promise<I.Charge> {
+    return this.request('POST', `${this.resource}/${id}/capture`, query);
   }
 
 }

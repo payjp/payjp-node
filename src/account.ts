@@ -1,7 +1,7 @@
 import Resource from './resource';
-import { AccountResponse } from './interfaces';
+import * as I from './index';
 
-export default class Account extends Resource {
+export default class Accounts extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -9,8 +9,8 @@ export default class Account extends Resource {
     this.resource = 'accounts';
   }
 
-  retrieve(){
-    return this.request('GET', `${this.resource}`) as AccountResponse;
+  retrieve(): Promise<I.Account> {
+    return this.request('GET', `${this.resource}`);
   }
 
 }

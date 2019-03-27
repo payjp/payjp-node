@@ -1,11 +1,8 @@
-import assert from 'power-assert';
+const assert = require('assert');
+const Payjp = require('../built');
+const config = require('./config');
 
-import Requestor from '../built/requestor';
-import Payjp from '../built';
-
-import config from './config';
-
-const payjp = new Payjp(config.auth_key, config);
+const {charges} = Payjp(config.apikey, config);
 
 describe('Charges Resource', () => {
 
@@ -13,7 +10,7 @@ describe('Charges Resource', () => {
   var _endpoint;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    charges.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       return Promise.resolve();
@@ -22,7 +19,7 @@ describe('Charges Resource', () => {
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.charges.list().then(() => {
+      return charges.list().then(() => {
         assert(_method === 'GET');
         assert(_endpoint === 'charges');
       });
@@ -34,14 +31,9 @@ describe('Charges Resource', () => {
       const query = {
         amount: 1000,
         currency: 'jpy',
-        card: {
-          number: 4242424242424242,
-          exp_month: 12, // eslint-disable-line camelcase
-          exp_year: 2035, // eslint-disable-line camelcase
-        },
-        capture: false
+        card: 'tok_test'
       };
-      return payjp.charges.create(query).then(() => {
+      return charges.create(query).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges');
       });
@@ -50,7 +42,7 @@ describe('Charges Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.charges.retrieve('id123').then(() => {
+      return charges.retrieve('id123').then(() => {
         assert(_method === 'GET');
         assert(_endpoint === 'charges/id123');
       });
@@ -59,10 +51,7 @@ describe('Charges Resource', () => {
 
   describe('update', () => {
     it('Sends the correct request', () => {
-      const query = {
-        description: 'oppai'
-      };
-      return payjp.charges.update('id123', query).then(() => {
+      return charges.update('id123', {}).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges/id123');
       });
@@ -71,10 +60,7 @@ describe('Charges Resource', () => {
 
   describe('capture', () => {
     it('Sends the correct request', () => {
-      const query = {
-        amount: 700
-      };
-      return payjp.charges.capture('id123', query).then(() => {
+      return charges.capture('id123', {}).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges/id123/capture');
       });
@@ -83,10 +69,7 @@ describe('Charges Resource', () => {
 
   describe('refund', () => {
     it('Sends the correct request', () => {
-      const query = {
-        refund_reason: 'no oppai' // eslint-disable-line camelcase
-      };
-      return payjp.charges.refund('id123', query).then(() => {
+      return charges.refund('id123', {}).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges/id123/refund');
       });

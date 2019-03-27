@@ -1,11 +1,8 @@
-import assert from 'power-assert';
+const assert = require('assert');
+const Payjp = require('../built');
+const config = require('./config');
 
-import Requestor from '../built/requestor';
-import Payjp from '../built';
-
-import config from './config';
-
-const payjp = new Payjp(config.auth_key, config);
+const {plans} = Payjp(config.apikey, config);
 
 describe('Plans Resource', () => {
 
@@ -13,7 +10,7 @@ describe('Plans Resource', () => {
   var _endpoint;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    plans.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       return Promise.resolve();
@@ -22,7 +19,7 @@ describe('Plans Resource', () => {
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.plans.list().then(() => {
+      return plans.list().then(() => {
         assert(_method === 'GET');
         assert(_endpoint === 'plans');
       });
@@ -37,7 +34,7 @@ describe('Plans Resource', () => {
         interval: 'month',
         name: 'premium plan'
       };
-      return payjp.plans.create(query).then(() => {
+      return plans.create(query).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'plans');
       });
@@ -46,7 +43,7 @@ describe('Plans Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.plans.retrieve('id123').then(() => {
+      return plans.retrieve('id123').then(() => {
         assert(_method === 'GET');
         assert(_endpoint === 'plans/id123');
       });
@@ -58,7 +55,7 @@ describe('Plans Resource', () => {
       const query = {
         name: 'super hyper premium plan'
       };
-      return payjp.plans.update('id123', query).then(() => {
+      return plans.update('id123', query).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'plans/id123');
       });
@@ -67,7 +64,7 @@ describe('Plans Resource', () => {
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return payjp.plans.delete('id123').then(() => {
+      return plans.delete('id123').then(() => {
         assert(_method === 'DELETE');
         assert(_endpoint === 'plans/id123');
       });

@@ -1,11 +1,8 @@
-import assert from 'power-assert';
+const assert = require('assert');
+const Payjp = require('../built');
+const config = require('./config');
 
-import Requestor from '../built/requestor';
-import Payjp from '../built';
-
-import config from './config';
-
-const payjp = new Payjp(config.auth_key, config);
+const {customers} = Payjp(config.apikey, config);
 
 describe('Customer Resource', () => {
 
@@ -13,7 +10,12 @@ describe('Customer Resource', () => {
   var _endpoint;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    customers.request = (...args) => {
+      _method = args[0];
+      _endpoint = args[1];
+      return Promise.resolve();
+    };
+    customers.subscriptions.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       return Promise.resolve();
@@ -22,7 +24,7 @@ describe('Customer Resource', () => {
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.list().then(() => {
+      return customers.list().then(() => {
         assert(_method === 'GET');
         assert(_endpoint === 'customers');
       });
@@ -34,7 +36,7 @@ describe('Customer Resource', () => {
       const query = {
         email: 'payjp-node@example.com'
       };
-      return payjp.customers.create(query).then(() => {
+      return customers.create(query).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'customers');
       });
@@ -43,7 +45,7 @@ describe('Customer Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.retrieve('id123').then(() => {
+      return customers.retrieve('id123').then(() => {
         assert(_method === 'GET');
         assert(_endpoint === 'customers/id123');
       });
@@ -55,7 +57,7 @@ describe('Customer Resource', () => {
       const query = {
         email: 'payjp-node-updated@example.com'
       };
-      return payjp.customers.update('id123', query).then(() => {
+      return customers.update('id123', query).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'customers/id123');
       });
@@ -64,11 +66,28 @@ describe('Customer Resource', () => {
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return payjp.customers.delete('id123').then(() => {
+      return customers.delete('id123').then(() => {
         assert(_method === 'DELETE');
         assert(_endpoint === 'customers/id123');
       });
     });
   });
 
+  describe('customer\'s subscription list', () => {
+    it('Sends the correct request', () => {
+      return customers.subscriptions.list('cus_id456').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'customers/cus_id456/subscriptions');
+      });
+    });
+  });
+
+  describe('customer\'s subscription retrieve', () => {
+    it('Sends the correct request', () => {
+      return customers.subscriptions.retrieve('cus_id456', 'id123').then(() => {
+        assert(_method === 'GET');
+        assert(_endpoint === 'customers/cus_id456/subscriptions/id123');
+      });
+    });
+  });
 });

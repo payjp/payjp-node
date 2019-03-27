@@ -1,8 +1,8 @@
 import Resource from './resource';
 
-import { PlanResponse, PlanDeleted } from './interfaces';
+import * as I from './index';
 
-export default class Plan extends Resource {
+export default class Plans extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -10,24 +10,24 @@ export default class Plan extends Resource {
     this.resource = 'plans';
   }
 
-  list(query: object = {}) {
-    return this.request('GET', this.resource, query) as PlanResponse[];
-
-  }
-  create(query: object = {}) {
-    return this.request('POST', this.resource, query) as PlanResponse;
+  list(query: I.ListOptions = {}): Promise<I.List<I.Plan>> {
+    return this.request('GET', this.resource, query);
   }
 
-  retrieve(id: string): object {
-    return this.request('GET', `${this.resource}/${id}`) as PlanResponse;
+  create(query: I.PlanCreationOptions): Promise<I.Plan> {
+    return this.request('POST', this.resource, query);
   }
 
-  update(id: string, query: object = {}): object {
-    return this.request('POST', `${this.resource}/${id}`, query) as PlanResponse;
+  retrieve(id: string): Promise<I.Plan> {
+    return this.request('GET', `${this.resource}/${id}`);
   }
 
-  delete(id: string) {
-    return this.request('DELETE', `${this.resource}/${id}`) as PlanDeleted;
+  update(id: string, query: I.PlanUpdateOptions = {}): Promise<I.Plan> {
+    return this.request('POST', `${this.resource}/${id}`, query);
+  }
+
+  delete(id: string): Promise<I.Deleted> {
+    return this.request('DELETE', `${this.resource}/${id}`);
   }
 
 }

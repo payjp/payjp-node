@@ -11,124 +11,49 @@ npm install --save payjp
 
 ## Dependencies
 
-- superagent
+- [superagent](https://visionmedia.github.io/superagent/)
 
 ## Documentation
 
-* [API Documentation](https://pay.jp/docs/api/)
+* [API Documentation](https://pay.jp/docs/api/?javascript)
 
 ### Example
 
+In advance, you need to get a token by [Checkout](https://pay.jp/docs/checkout) or [payjp.js](https://pay.jp/docs/payjs).
+
+Javascript
+
 ```js
 const payjp = require('payjp')('sk_test_c62fade9d045b54cd76d7036');
-const charge = await payjp.charges.create({
+payjp.charges.create({
   amount: 1000,
   currency: 'jpy',
-  card: {
-    number: 4242424242424242,
-    exp_month: 12,
-    exp_year: 2020,
-  },
-  capture: true
-});
+  card: 'token_id_by_Checkout_or_payjp.js'
+}).then(console.log).catch(console.error);
 ```
 
-#### Options
+Typescript
+
+```js
+import * as Payjp from 'payjp';
+const payjp = Payjp('sk_test_c62fade9d045b54cd76d7036');
+payjp.charges.create({
+  amount: 1000,
+  currency: 'jpy',
+  card: 'token_id_by_Checkout_or_payjp.js'
+}).then((charge: Payjp.Charge) => console.log(charge)
+).catch((e: Payjp.ResponseError) => console.error(e.response.body as Payjp.PayjpError));
+```
+
+### Options
 
 Options can be specified in the constructor.
 
-* Cert
+#### Timeout
 
-You can specify the certificate to be used for the request.
-
-```js
-const options = {
-  cert: 'path/to/ca-certificates.crt'
-}
-const payjp = require('payjp')('sk_...', options);
-```
-
-### Charge
+Timeout is configurable for the entire request (including all uploads, redirects, server processing time) to complete.
+If the response isn't fully downloaded within that time, the request will be aborted.
 
 ```js
-payjp.charges.retrieve(id)
-payjp.charges.create(query = {})
-payjp.charges.update(id, query = {})
-payjp.charges.list(query = {})
-payjp.charges.capture(id, query = {})
-payjp.charges.refund(id, query ={})
-```
-
-### Customer
-
-```js
-payjp.customers.retrieve(id)
-payjp.customers.create(query = {})
-payjp.customers.update(id, query = {})
-payjp.customers.delete(id)
-payjp.customers.list(query = {})
-```
-
-### Card
-
-```js
-payjp.customers.cards.retrieve(customer_id, card_id)
-payjp.customers.cards.create(customer_id, query = {})
-payjp.customers.cards.update(customer_id, card_id, query = {})
-payjp.customers.cards.delete(customer_id, card_id)
-payjp.customers.cards.list(customer_id, query = {})
-```
-
-### Plan
-
-```js
-payjp.plans.retrieve(id)
-payjp.plans.create(query = {})
-payjp.plans.update(id, query = {})
-payjp.plans.delete(id)
-payjp.plans.list(query = {})
-```
-
-### Subscription
-
-```js
-payjp.subscriptions.retrieve(id)
-payjp.subscriptions.create(query = {})
-payjp.subscriptions.update(id, query = {})
-payjp.subscriptions.delete(id)
-payjp.subscriptions.list(query = {})
-payjp.subscriptions.pause(id)
-payjp.subscriptions.resume(id, query = {})
-payjp.subscriptions.cancel(id)
-payjp.subscriptions.delete(id, query = {})
-payjp.customers.subscriptions.list(customer_id, query = {})
-payjp.customers.subscriptions.retrieve(customer_id, subscription_id)
-```
-
-### Token
-
-```js
-payjp.tokens.create(query = {})
-payjp.tokens.retrieve(id)
-```
-
-### Transfer
-
-```js
-payjp.transfers.list(query = {})
-payjp.transfers.retrieve(id)
-payjp.transfers.charges(id, query = {})
-```
-
-### Event
-
-```js
-payjp.events.retrieve(id)
-payjp.events.list(query = {})
-```
-
-### Account
-
-```js
-payjp.accounts.retrieve()
+const payjp = require('payjp')('sk_...', {timeout: 20 * 1000}); // in ms (this is 20 seconds)
 ```

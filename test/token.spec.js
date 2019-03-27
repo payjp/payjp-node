@@ -1,11 +1,8 @@
-import assert from 'power-assert';
+const assert = require('assert');
+const Payjp = require('../built');
+const config = require('./config');
 
-import Requestor from '../built/requestor';
-import Payjp from '../built';
-
-import config from './config';
-
-const payjp = new Payjp(config.auth_key, config);
+const {tokens} = Payjp(config.apikey, config);
 
 describe('Tokens Resource', () => {
 
@@ -13,7 +10,7 @@ describe('Tokens Resource', () => {
   var _endpoint;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    tokens.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       return Promise.resolve();
@@ -22,14 +19,7 @@ describe('Tokens Resource', () => {
 
   describe('create', () => {
     it('Sends the correct request', () => {
-      const query = {
-        card: {
-          number: 4242424242424242,
-          exp_month: 12,
-          exp_year: 2035,
-        }
-      };
-      return payjp.tokens.create(query).then(() => {
+      return tokens.create({}).then(() => {
         assert(_method === 'POST');
         assert(_endpoint === 'tokens');
       });
@@ -38,7 +28,7 @@ describe('Tokens Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.tokens.retrieve('id123').then(() => {
+      return tokens.retrieve('id123').then(() => {
         assert(_method === 'GET');
         assert(_endpoint === 'tokens/id123');
       });
