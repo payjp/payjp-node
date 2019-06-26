@@ -49,11 +49,16 @@ export default class Requestor {
       }
 
       request.end((err, res) => {
-        if (res.statusCode === 200) {
-          resolve(res.body);
-        } else {
-          reject(err);
+        if (err) {
+          return reject(err);
+        } else if (res.type !== 'application/json' || res.statusCode !== 200) {
+          return reject({
+            message: 'Invalid response',
+            response: res.text,
+            status: res.status,
+          });
         }
+        return resolve(res.body);
       });
 
     });
