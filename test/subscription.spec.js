@@ -14,7 +14,15 @@ describe('Subscription Resource', () => {
   var _query;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    payjp.subscriptions.request = (...args) => {
+      _method = args[0];
+      _endpoint = args[1];
+      if (Object.keys(args).length > 2) {
+        _query = args[2];
+      }
+      return Promise.resolve();
+    };
+    payjp.customers.subscriptions.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       if (Object.keys(args).length > 2) {
