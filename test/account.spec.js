@@ -13,7 +13,7 @@ describe('Accounts Resource', () => {
   var _endpoint;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    payjp.accounts.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       return Promise.resolve();

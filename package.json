@@ -1,6 +1,6 @@
 {
   "name": "payjp",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "PAY.JP node.js bindings",
   "main": "lib/index.js",
   "keywords": [
@@ -21,12 +21,13 @@
   },
   "author": "PAY.JP <support@pay.jp> (https://pay.jp)",
   "contributors": [
-    "Yoichi Fujimoto <wozozo@gmail.com>"
+    "Yoichi Fujimoto <wozozo@gmail.com>",
+    "Daiki Arai <darai0512@binc.jp>"
   ],
   "license": "MIT",
   "devEngines": {
-    "node": "4.x || 5.x",
-    "npm": "2.x || 3.x"
+    "node": "8.x || 10.x",
+    "npm": "6.x"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
