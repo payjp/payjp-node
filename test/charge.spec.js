@@ -13,7 +13,7 @@ describe('Charges Resource', () => {
   var _endpoint;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    payjp.charges.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       return Promise.resolve();

@@ -13,7 +13,7 @@ describe('Plans Resource', () => {
   var _endpoint;
 
   before(() => {
-    Requestor.prototype.request = (...args) => {
+    payjp.plans.request = (...args) => {
       _method = args[0];
       _endpoint = args[1];
       return Promise.resolve();
