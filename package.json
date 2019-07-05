@@ -2,7 +2,8 @@
   "name": "payjp",
   "version": "1.4.0",
   "description": "PAY.JP node.js bindings",
-  "main": "lib/index.js",
+  "main": "built/index.js",
+  "types": "built/index.d.ts",
   "keywords": [
     "PAY.JP",
     "payment processing",
@@ -10,8 +11,8 @@
     "api"
   ],
   "scripts": {
-    "test": "mocha --compilers js:espower-babel/guess",
-    "build": "babel ./src --out-dir ./lib",
+    "test": "npm run build && mocha --compilers js:espower-babel/guess test/**/*.js",
+    "build": "tsc",
     "lint": "eslint src",
     "prepublish": "npm run build"
   },
@@ -30,6 +31,7 @@
     "npm": "6.x"
   },
   "devDependencies": {
+    "@types/superagent": "^3.8.0",
     "babel-cli": "^6.4.5",
     "babel-core": "^6.4.5",
     "babel-eslint": "^7.2.3",
@@ -41,7 +43,8 @@
     "espower-babel": "^4.0.1",
     "mocha": "^3.3.0",
     "power-assert": "^1.1.0",
-    "pre-commit": "^1.1.2"
+    "pre-commit": "^1.1.2",
+    "typescript": "^2.9.2"
   },
   "dependencies": {
     "superagent": "^3.5.2"
