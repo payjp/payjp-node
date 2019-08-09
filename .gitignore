@@ -32,4 +32,5 @@ node_modules
 
 .vscode
 lib/
+package-lock.json
 yarn.lock
