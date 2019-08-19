@@ -164,7 +164,7 @@ namespace Payjp {
     object: "charge",
     amount: number,
     amount_refunded: number,
-    captured: true,
+    captured: boolean,
     captured_at: number | null,
     card: Card | null,
     created: number,
