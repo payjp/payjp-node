@@ -2,24 +2,13 @@ const assert = require('assert');
 const Payjp = require('../built');
 const config = require('./config');
 
-const {charges} = Payjp(config.apikey, config);
+const payjp = Payjp(config.apikey, config);
+payjp.charges.request = (...args) => Promise.resolve(args);
 
 describe('Charges Resource', () => {
-
-  var _method;
-  var _endpoint;
-
-  before(() => {
-    charges.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      return Promise.resolve();
-    };
-  });
-
   describe('list', () => {
     it('Sends the correct request', () => {
-      return charges.list().then(() => {
+      return payjp.charges.list().then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'charges');
       });
@@ -33,7 +22,7 @@ describe('Charges Resource', () => {
         currency: 'jpy',
         card: 'tok_test'
       };
-      return charges.create(query).then(() => {
+      return payjp.charges.create(query).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges');
       });
@@ -42,7 +31,7 @@ describe('Charges Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return charges.retrieve('id123').then(() => {
+      return payjp.charges.retrieve('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'charges/id123');
       });
@@ -51,7 +40,7 @@ describe('Charges Resource', () => {
 
   describe('update', () => {
     it('Sends the correct request', () => {
-      return charges.update('id123', {}).then(() => {
+      return payjp.charges.update('id123', {}).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges/id123');
       });
@@ -60,7 +49,7 @@ describe('Charges Resource', () => {
 
   describe('capture', () => {
     it('Sends the correct request', () => {
-      return charges.capture('id123', {}).then(() => {
+      return payjp.charges.capture('id123', {}).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges/id123/capture');
       });
@@ -69,7 +58,7 @@ describe('Charges Resource', () => {
 
   describe('refund', () => {
     it('Sends the correct request', () => {
-      return charges.refund('id123', {}).then(() => {
+      return payjp.charges.refund('id123', {}).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'charges/id123/refund');
       });

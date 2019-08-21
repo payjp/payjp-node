@@ -2,33 +2,26 @@ const assert = require('assert');
 const Payjp = require('../built');
 const config = require('./config');
 
-const {tokens} = Payjp(config.apikey, config);
-
+const payjp = Payjp(config.apikey, config);
+payjp.tokens.request = (...args) => Promise.resolve(args);
 describe('Tokens Resource', () => {
-
-  var _method;
-  var _endpoint;
-
-  before(() => {
-    tokens.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      return Promise.resolve();
-    };
-  });
 
   describe('create', () => {
     it('Sends the correct request', () => {
-      return tokens.create({}).then(() => {
+      const query = {};
+      const headers = {};
+      return payjp.tokens.create(query, headers).then(([_method, _endpoint, _query, _headers]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'tokens');
+        assert.deepStrictEqual(_query, query);
+        assert.deepStrictEqual(_headers, headers);
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return tokens.retrieve('id123').then(() => {
+      return payjp.tokens.retrieve('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'tokens/id123');
       });

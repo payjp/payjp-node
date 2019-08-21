@@ -2,24 +2,14 @@ const assert = require('assert');
 const Payjp = require('../built');
 const config = require('./config');
 
-const {transfers} = Payjp(config.apikey, config);
+const payjp = Payjp(config.apikey, config);
+payjp.transfers.request = (...args) => Promise.resolve(args);
 
 describe('Transfer Resource', () => {
 
-  var _method;
-  var _endpoint;
-
-  before(() => {
-    transfers.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      return Promise.resolve();
-    };
-  });
-
   describe('list', () => {
     it('Sends the correct request', () => {
-      return transfers.list().then(() => {
+      return payjp.transfers.list().then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'transfers');
       });
@@ -28,7 +18,7 @@ describe('Transfer Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return transfers.retrieve('id123').then(() => {
+      return payjp.transfers.retrieve('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'transfers/id123');
       });
@@ -37,7 +27,7 @@ describe('Transfer Resource', () => {
 
   describe('charges', () => {
     it('Sends the correct request', () => {
-      return transfers.charges('id123').then(() => {
+      return payjp.transfers.charges('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'transfers/id123/charges');
       });

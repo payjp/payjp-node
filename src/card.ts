@@ -1,7 +1,7 @@
 import Resource from './resource';
 import * as I from './index';
 
-export default class Card extends Resource {
+export default class Cards extends Resource {
   resource: string;
 
   constructor(payjp) {

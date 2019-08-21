@@ -2,28 +2,14 @@ const assert = require('assert');
 const Payjp = require('../built');
 const config = require('./config');
 
-const {subscriptions} = Payjp(config.apikey, config);
+const payjp = Payjp(config.apikey, config);
+payjp.subscriptions.request = (...args) => Promise.resolve(args);
 
 describe('Subscription Resource', () => {
 
-  var _method;
-  var _endpoint;
-  var _query;
-
-  before(() => {
-    subscriptions.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      if (Object.keys(args).length > 2) {
-        _query = args[2];
-      }
-      return Promise.resolve();
-    };
-  });
-
   describe('list', () => {
     it('Sends the correct request', () => {
-      return subscriptions.list().then(() => {
+      return payjp.subscriptions.list().then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'subscriptions');
       });
@@ -36,9 +22,10 @@ describe('Subscription Resource', () => {
         customer: 'cus_id456',
         plan: 'pln_id789'
       };
-      return subscriptions.create(query).then(() => {
+      return payjp.subscriptions.create(query).then(([_method, _endpoint, _query]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'subscriptions');
+        assert.deepStrictEqual(_query, query);
       });
     });
   });
@@ -48,16 +35,17 @@ describe('Subscription Resource', () => {
       const query = {
         plan: 'pln_id789'
       };
-      return subscriptions.update('id123', query).then(() => {
+      return payjp.subscriptions.update('id123', query).then(([_method, _endpoint, _query]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'subscriptions/id123');
+        assert.deepStrictEqual(_query, query);
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return subscriptions.retrieve('id123').then(() => {
+      return payjp.subscriptions.retrieve('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'subscriptions/id123');
       });
@@ -66,7 +54,7 @@ describe('Subscription Resource', () => {
 
   describe('pause', () => {
     it('Sends the correct request', () => {
-      return subscriptions.pause('id123').then(() => {
+      return payjp.subscriptions.pause('id123').then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'subscriptions/id123/pause');
       });
@@ -75,7 +63,7 @@ describe('Subscription Resource', () => {
 
   describe('resume', () => {
     it('Sends the correct request', () => {
-      return subscriptions.resume('id123').then(() => {
+      return payjp.subscriptions.resume('id123').then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'subscriptions/id123/resume');
       });
@@ -84,7 +72,7 @@ describe('Subscription Resource', () => {
 
   describe('cancel', () => {
     it('Sends the correct request', () => {
-      return subscriptions.cancel('id123').then(() => {
+      return payjp.subscriptions.cancel('id123').then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'subscriptions/id123/cancel');
       });
@@ -96,10 +84,10 @@ describe('Subscription Resource', () => {
       const query = {
         prorate: true
       };
-      return subscriptions.delete('id123', query).then(() => {
+      return payjp.subscriptions.delete('id123', query).then(([_method, _endpoint, _query]) => {
         assert(_method === 'DELETE');
         assert(_endpoint === 'subscriptions/id123');
-        assert(_query === query);
+        assert.deepStrictEqual(_query, query);
       });
     });
   });

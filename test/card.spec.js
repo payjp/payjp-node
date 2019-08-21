@@ -2,24 +2,13 @@ const assert = require('assert');
 const Payjp = require('../built');
 const config = require('./config');
 
-const cards = Payjp(config.apikey, config).customers.cards;
+const payjp = Payjp(config.apikey, config);
+payjp.customers.cards.request = (...args) => Promise.resolve(args);
 
 describe('Cards Resource', () => {
-
-  var _method;
-  var _endpoint;
-
-  before(() => {
-    cards.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      return Promise.resolve();
-    };
-  });
-
   describe('create', () => {
     it('Sends the correct request', () => {
-      return cards.create('cus_id123', {}).then(() => {
+      return payjp.customers.cards.create('cus_id123', {}).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'customers/cus_id123/cards');
       });
@@ -28,7 +17,7 @@ describe('Cards Resource', () => {
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return cards.list('cus_id123').then(() => {
+      return payjp.customers.cards.list('cus_id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'customers/cus_id123/cards');
       });
@@ -37,7 +26,7 @@ describe('Cards Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return cards.retrieve('cus_id123', 'id456').then(() => {
+      return payjp.customers.cards.retrieve('cus_id123', 'id456').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'customers/cus_id123/cards/id456');
       });
@@ -46,7 +35,7 @@ describe('Cards Resource', () => {
 
   describe('update', () => {
     it('Sends the correct request', () => {
-      return cards.update('cus_id123', 'id456', {}).then(() => {
+      return payjp.customers.cards.update('cus_id123', 'id456', {}).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'customers/cus_id123/cards/id456');
       });
@@ -55,7 +44,7 @@ describe('Cards Resource', () => {
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return cards.delete('cus_id123', 'id456').then(() => {
+      return payjp.customers.cards.delete('cus_id123', 'id456').then(([_method, _endpoint]) => {
         assert(_method === 'DELETE');
         assert(_endpoint === 'customers/cus_id123/cards/id456');
       });

@@ -5,9 +5,10 @@ const http = require('http');
 const Payjp = require('../built');
 
 describe('HTTP Requestor', () => {
+  const apikey = 'apikey';
+  const encodedKey = Buffer.from(apikey + ':').toString('base64');
   describe('buildHeader', () => {
-    const encodedKey = Buffer.from(`${'apikey'}:`).toString('base64');
-    const payjp = new Payjp('apikey', {});
+    const payjp = new Payjp(apikey, {});
 
     it('GET', () => {
       let header = payjp.charges.buildHeader('GET');
@@ -31,10 +32,8 @@ describe('HTTP Requestor', () => {
     });
   });
   describe('request', () => {
-    const apikey = 'apikey';
     it('return 200 by POST with checking request headers', (done) => {
       const dummy = {amount: 50};
-      const encodedKey = Buffer.from(`${apikey}:`).toString('base64');
       const status = 200;
       const server = http.createServer((msg, res) => {
         server.close();

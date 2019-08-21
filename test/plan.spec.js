@@ -2,24 +2,14 @@ const assert = require('assert');
 const Payjp = require('../built');
 const config = require('./config');
 
-const {plans} = Payjp(config.apikey, config);
+const payjp = Payjp(config.apikey, config);
+payjp.plans.request = (...args) => Promise.resolve(args);
 
 describe('Plans Resource', () => {
 
-  var _method;
-  var _endpoint;
-
-  before(() => {
-    plans.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      return Promise.resolve();
-    };
-  });
-
   describe('list', () => {
     it('Sends the correct request', () => {
-      return plans.list().then(() => {
+      return payjp.plans.list().then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'plans');
       });
@@ -34,7 +24,7 @@ describe('Plans Resource', () => {
         interval: 'month',
         name: 'premium plan'
       };
-      return plans.create(query).then(() => {
+      return payjp.plans.create(query).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'plans');
       });
@@ -43,7 +33,7 @@ describe('Plans Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return plans.retrieve('id123').then(() => {
+      return payjp.plans.retrieve('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'plans/id123');
       });
@@ -55,7 +45,7 @@ describe('Plans Resource', () => {
       const query = {
         name: 'super hyper premium plan'
       };
-      return plans.update('id123', query).then(() => {
+      return payjp.plans.update('id123', query).then(([_method, _endpoint]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'plans/id123');
       });
@@ -64,7 +54,7 @@ describe('Plans Resource', () => {
 
   describe('delete', () => {
     it('Sends the correct request', () => {
-      return plans.delete('id123').then(() => {
+      return payjp.plans.delete('id123').then(([_method, _endpoint]) => {
         assert(_method === 'DELETE');
         assert(_endpoint === 'plans/id123');
       });

@@ -2,24 +2,13 @@ const assert = require('assert');
 const Payjp = require('../built');
 const config = require('./config');
 
-const {events} = Payjp(config.apikey, config);
-
+const payjp = Payjp(config.apikey, config);
+payjp.events.request = (...args) => Promise.resolve(args);
 describe('Events Resource', () => {
-
-  var _method;
-  var _endpoint;
-
-  before(() => {
-    events.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      return Promise.resolve();
-    };
-  });
 
   describe('list', () => {
     it('Sends the correct request', () => {
-      return events.list().then(() => {
+      return payjp.events.list().then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'events');
       });
@@ -28,7 +17,7 @@ describe('Events Resource', () => {
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return events.retrieve('id123').then(() => {
+      return payjp.events.retrieve('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'events/id123');
       });

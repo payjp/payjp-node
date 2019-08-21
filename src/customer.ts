@@ -1,5 +1,5 @@
 import Resource from './resource';
-import Card from './card';
+import Cards from './card';
 import * as I from './index';
 
 class CustomerSubscriptions extends Resource {
@@ -28,7 +28,7 @@ export default class Customers extends Resource {
   constructor(payjp) {
     super(payjp);
     this.resource = 'customers';
-    this.cards = new Card(payjp);
+    this.cards = new Cards(payjp);
     this.subscriptions = new CustomerSubscriptions(payjp);
   }
 
