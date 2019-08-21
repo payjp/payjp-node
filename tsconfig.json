@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "./built",
-    "target": "es5",
+    "target": "ESNext",
     "module": "commonjs",
-    "lib": ["es6", "dom"],
-    "allowSyntheticDefaultImports": true,
+    "lib": ["dom"],
+    "outDir": "./built",
     "declaration": true
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*.ts"
   ]
 }

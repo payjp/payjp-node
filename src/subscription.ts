@@ -1,8 +1,7 @@
 import Resource from './resource';
+import * as I from './index';
 
-import { SubscriptionResponse, SubscriptionDeleted } from './interfaces';
-
-export default class Subscription extends Resource {
+export default class Subscriptions extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -10,36 +9,36 @@ export default class Subscription extends Resource {
     this.resource = 'subscriptions';
   }
 
-  list(query: object = {}) {
-    return this.request('GET', this.resource, query) as SubscriptionResponse[];
+  list(query: I.SubscriptionListOptions = {}): Promise<I.List<I.Subscription>> {
+    return this.request('GET', this.resource, query);
   }
 
-  create(query: object = {}) {
-    return this.request('POST', this.resource, query) as SubscriptionResponse;
+  create(query: I.SubscriptionCreationOptions): Promise<I.Subscription> {
+    return this.request('POST', this.resource, query);
   }
 
-  update(id: string, query: object = {}) {
-    return this.request('POST', `${this.resource}/${id}`, query) as SubscriptionResponse;
+  update(id: string, query: I.SubscriptionUpdateOptions = {}): Promise<I.Subscription> {
+    return this.request('POST', `${this.resource}/${id}`, query);
   }
 
-  retrieve(id: string) {
-    return this.request('GET', `${this.resource}/${id}`) as SubscriptionResponse;
+  retrieve(id: string): Promise<I.Subscription> {
+    return this.request('GET', `${this.resource}/${id}`);
   }
 
-  pause(id: string) {
-    return this.request('POST', `${this.resource}/${id}/pause`) as SubscriptionResponse;
+  pause(id: string): Promise<I.Subscription> {
+    return this.request('POST', `${this.resource}/${id}/pause`);
   }
 
-  resume(id: string, query: object = {}) {
-    return this.request('POST', `${this.resource}/${id}/resume`, query) as SubscriptionResponse;
+  resume(id: string, query: I.SubscriptionResumeOptions = {}): Promise<I.Subscription> {
+    return this.request('POST', `${this.resource}/${id}/resume`, query);
   }
 
-  cancel(id: string) {
-    return this.request('POST', `${this.resource}/${id}/cancel`) as SubscriptionResponse;
+  cancel(id: string): Promise<I.Subscription> {
+    return this.request('POST', `${this.resource}/${id}/cancel`);
   }
 
-  delete(id: string, query: object = {}) {
-    return this.request('DELETE', `${this.resource}/${id}`, query) as SubscriptionDeleted;
+  delete(id: string, query: I.SubscriptionDeleteOptions = {}): Promise<I.Deleted> {
+    return this.request('DELETE', `${this.resource}/${id}`, query);
   }
 
 }

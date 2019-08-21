@@ -1,9 +1,8 @@
 import Resource from './resource';
-import Card from './card';
+import Cards from './card';
+import * as I from './index';
 
-import { CustomerResponse, CustomerDeleted, SubscriptionResponse } from './interfaces';
-
-class CustomerSubscription extends Resource {
+class CustomerSubscriptions extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -11,17 +10,17 @@ class CustomerSubscription extends Resource {
     this.resource = 'subscriptions';
   }
 
-  list(customer_id: string, query: object = {}) {
-    return this.request('GET', `customers/${customer_id}/${this.resource}`, query) as SubscriptionResponse[];
+  list(id: string, query: I.CustomerSubscriptionListOptions = {}): Promise<I.List<I.Subscription>> {
+    return this.request('GET', `customers/${id}/${this.resource}`, query);
   }
 
-  retrieve(customer_id: string, id: string) {
-    return this.request('GET', `customers/${customer_id}/${this.resource}/${id}`) as SubscriptionResponse;
+  retrieve(id: string, subscriptionId: string): Promise<I.Subscription> {
+    return this.request('GET', `customers/${id}/${this.resource}/${subscriptionId}`);
   }
 
 }
 
-export default class Customer extends Resource {
+export default class Customers extends Resource {
   resource: string;
   cards: object;
   subscriptions: object;
@@ -29,28 +28,28 @@ export default class Customer extends Resource {
   constructor(payjp) {
     super(payjp);
     this.resource = 'customers';
-    this.cards = new Card(payjp);
-    this.subscriptions = new CustomerSubscription(payjp);
+    this.cards = new Cards(payjp);
+    this.subscriptions = new CustomerSubscriptions(payjp);
   }
 
-  list(query: object = {}) {
-    return this.request('GET', this.resource, query) as CustomerResponse[];
+  list(query: I.ListOptions = {}): Promise<I.List<I.Customer>> {
+    return this.request('GET', this.resource, query);
   }
 
-  create(query: object = {}) {
-    return this.request('POST', this.resource, query) as CustomerResponse;
+  create(query: I.CustomerCreationOptions = {}): Promise<I.Customer> {
+    return this.request('POST', this.resource, query);
   }
 
-  retrieve(id: string) {
-    return this.request('GET', `${this.resource}/${id}`) as CustomerResponse;
+  retrieve(id: string): Promise<I.Customer> {
+    return this.request('GET', `${this.resource}/${id}`);
   }
 
-  update(id: string, query = {}) {
-    return this.request('POST', `${this.resource}/${id}`, query) as CustomerResponse;
+  update(id: string, query: I.CustomerUpdateOptions = {}): Promise<I.Customer> {
+    return this.request('POST', `${this.resource}/${id}`, query);
   }
 
-  delete(id: string) {
-    return this.request('DELETE', `${this.resource}/${id}`) as CustomerDeleted;
+  delete(id: string): Promise<I.Deleted> {
+    return this.request('DELETE', `${this.resource}/${id}`);
   }
 
 }

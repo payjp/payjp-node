@@ -1,7 +1,7 @@
 import Resource from './resource';
-import { CardResponse, CardDeleted } from './interfaces';
+import * as I from './index';
 
-export default class Card extends Resource {
+export default class Cards extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -9,24 +9,24 @@ export default class Card extends Resource {
     this.resource = 'cards';
   }
 
-  list(customer_id: string, query: object = {}) {
-    return this.request('GET', `customers/${customer_id}/${this.resource}`, query) as CardResponse[];
+  list(customerId: string, query: I.ListOptions = {}): Promise<I.List<I.Card>> {
+    return this.request('GET', `customers/${customerId}/${this.resource}`, query);
   }
 
-  create(customer_id: string, query: object = {}) {
-    return this.request('POST', `customers/${customer_id}/${this.resource}`, query) as CardResponse;
+  create(customerId: string, query: object = {}): Promise<I.Card> {
+    return this.request('POST', `customers/${customerId}/${this.resource}`, query);
   }
 
-  retrieve(customer_id: string, id: string) {
-    return this.request('GET', `customers/${customer_id}/${this.resource}/${id}`) as CardResponse;
+  retrieve(customerId: string, id: string): Promise<I.Card> {
+    return this.request('GET', `customers/${customerId}/${this.resource}/${id}`);
   }
 
-  update(customer_id: string, id: string, query: object = {}) {
-    return this.request('POST', `customers/${customer_id}/${this.resource}/${id}`, query) as CardResponse;
+  update(customerId: string, id: string, query: object = {}): Promise<I.Card> {
+    return this.request('POST', `customers/${customerId}/${this.resource}/${id}`, query);
   }
 
-  delete(customer_id: string, id: string) {
-    return this.request('DELETE', `customers/${customer_id}/${this.resource}/${id}`) as CardDeleted;
+  delete(customerId: string, id: string): Promise<I.Deleted> {
+    return this.request('DELETE', `customers/${customerId}/${this.resource}/${id}`);
   }
 
 }

@@ -11,45 +11,39 @@
     "api"
   ],
   "scripts": {
-    "test": "npm run build && mocha --compilers js:espower-babel/guess test/**/*.js",
+    "test": "npm run lint && npm run build && npm run mocha",
     "build": "tsc",
-    "lint": "eslint src",
+    "lint": "npm run lint:base -- .",
+    "lint:base": "eslint --ignore-path .gitignore --ext .js,.ts",
+    "lint:fix": "npm run lint -- --fix",
+    "mocha": "mocha --timeout=10000",
     "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/payjp/payjp-node.git"
+    "url": "git://github.com/payjp/payjp-node.git"
   },
   "author": "PAY.JP <support@pay.jp> (https://pay.jp)",
   "contributors": [
-    "Yoichi Fujimoto <wozozo@gmail.com>",
-    "Daiki Arai <darai0512@binc.jp>"
+    "Daiki Arai <darai0512@yahoo.co.jp>",
+    "Yoichi Fujimoto <wozozo@gmail.com>"
   ],
   "license": "MIT",
-  "devEngines": {
-    "node": "8.x || 10.x",
-    "npm": "6.x"
+  "engines": {
+    "node": ">=6"
   },
   "devDependencies": {
-    "@types/superagent": "^3.8.0",
-    "babel-cli": "^6.4.5",
-    "babel-core": "^6.4.5",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.4.5",
-    "babel-preset-es2015": "^6.3.13",
-    "eslint": "^6.0.1",
-    "espower-babel": "^4.0.1",
-    "mocha": "^3.3.0",
-    "power-assert": "^1.1.0",
-    "pre-commit": "^1.1.2",
-    "typescript": "^2.9.2"
+    "@types/superagent": "3.8.3",
+    "@typescript-eslint/eslint-plugin": "1.6.0",
+    "@types/prettier": "1.16.1",
+    "@typescript-eslint/parser": "1.6.0",
+    "eslint": "5.15.1",
+    "eslint-config-prettier": "4.1.0",
+    "mocha": "^6.0.2",
+    "typescript": "3.4.5",
+    "prettier": "1.17.1"
   },
   "dependencies": {
-    "superagent": "^3.5.2"
-  },
-  "pre-commit": [
-    "lint"
-  ]
+    "superagent": "3.8.3"
+  }
 }

@@ -1,58 +1,42 @@
 /* global Buffer */
 
-import assert from 'power-assert';
-import http from 'http';
-import Requestor from '../built/requestor';
+const assert = require('assert');
+const http = require('http');
+const Payjp = require('../built');
 
 describe('HTTP Requestor', () => {
-
-  var _requestor;
-
-  before(() => {
-    _requestor = new Requestor('apikey', 'https://api.pay.jp/v999');
-  });
-
+  const apikey = 'apikey';
+  const encodedKey = Buffer.from(apikey + ':').toString('base64');
   describe('buildHeader', () => {
-
-    const encodedKey = Buffer.from(`${'apikey'}:`).toString('base64');
+    const payjp = new Payjp(apikey, {});
 
     it('GET', () => {
-      let header = _requestor.buildHeader('GET');
+      let header = payjp.charges.buildHeader('GET');
       assert(header['Accept'] === 'application/json');
       assert(header['Authorization'] === `Basic ${encodedKey}`);
       assert(header['Content-Type'] === undefined);
     });
 
     it('POST', () => {
-      let header = _requestor.buildHeader('POST');
+      let header = payjp.charges.buildHeader('POST');
       assert(header['Accept'] === 'application/json');
       assert(header['Authorization'] === `Basic ${encodedKey}`);
       assert(header['Content-Type'] === 'application/x-www-form-urlencoded');
     });
 
     it('DELETE', () => {
-      let header = _requestor.buildHeader('DELETE');
+      let header = payjp.charges.buildHeader('DELETE');
       assert(header['Accept'] === 'application/json');
       assert(header['Authorization'] === `Basic ${encodedKey}`);
       assert(header['Content-Type'] === undefined);
     });
   });
-
-  describe('buildUrl', () => {
-    it('return correct endpoint', () => {
-      let url = _requestor.buildUrl('charges');
-      assert(url === 'https://api.pay.jp/v999/charges');
-    });
-  });
-
   describe('request', () => {
-    it('return 200 by POST', (done) => {
-      const method = 'POST';
-      const dummy = {object: 'payjp'};
-      const apikey = 'apikey';
-      const encodedKey = Buffer.from(`${apikey}:`).toString('base64');
+    it('return 200 by POST with checking request headers', (done) => {
+      const dummy = {amount: 50};
       const status = 200;
       const server = http.createServer((msg, res) => {
+        server.close();
         assert(!!msg.headers.host);
         assert.strictEqual(msg.headers['accept-encoding'], 'gzip, deflate');
         assert.strictEqual(msg.headers['user-agent'].indexOf('node-superagent/'), 0);
@@ -61,12 +45,12 @@ describe('HTTP Requestor', () => {
         assert.strictEqual(msg.headers.accept, 'application/json');
         assert.strictEqual(msg.headers.authorization, 'Basic ' + encodedKey);
         assert.strictEqual(msg.headers.connection, 'close');
-        assert.strictEqual(msg.method, method);
-        assert.strictEqual(msg.url, '/v1/test');
+        assert.strictEqual(msg.method, 'POST');
+        assert.strictEqual(msg.url, '/v1/charges');
         let rawData = '';
         msg.on('data', (chunk) => { rawData += chunk; });
         msg.on('end', () => {
-          assert.strictEqual(rawData, 'object=payjp');
+          assert.strictEqual(rawData, 'amount=50');
           const body = JSON.stringify(dummy);
           res.writeHead(status, {
             'Content-Length': Buffer.byteLength(body),
@@ -76,33 +60,24 @@ describe('HTTP Requestor', () => {
         });
       }).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
-        const requestor = new Requestor(apikey, apibase, {cert: null});
-        requestor.request(method, 'test', dummy).then((r) => {
+        const payjp = new Payjp(apikey, {apibase});
+        payjp.charges.create(dummy).then((r) => {
           assert.deepStrictEqual(r, dummy);
-          server.close();
           done();
         });
       });
     });
-    it('return 404 by GET', (done) => {
-      const method = 'GET';
+    it('return 400 by GET', (done) => {
       const dummy = {object: 'payjp'};
-      const apikey = 'apikey';
-      const encodedKey = Buffer.from(`${apikey}:`).toString('base64');
-      const status = 404;
+      const status = 400;
       const server = http.createServer((msg, res) => {
-        assert(!!msg.headers.host);
-        assert.strictEqual(msg.headers['accept-encoding'], 'gzip, deflate');
-        assert.strictEqual(msg.headers['user-agent'].indexOf('node-superagent/'), 0);
-        assert.strictEqual(msg.headers.accept, 'application/json');
-        assert.strictEqual(msg.headers.authorization, 'Basic ' + encodedKey);
-        assert.strictEqual(msg.headers.connection, 'close');
-        assert.strictEqual(msg.method, method);
-        assert.strictEqual(msg.url, '/v1/notfound?object=payjp');
+        server.close();
+        assert.strictEqual(msg.method, 'GET');
+        assert.strictEqual(msg.url, '/v1/charges?object=payjp');
         const body = JSON.stringify({error: {
           message: 'test',
           status,
-          type: 'not_found_error',
+          type: 'client_error',
         }});
         res.writeHead(status, {
           'Content-Length': Buffer.byteLength(body),
@@ -111,55 +86,41 @@ describe('HTTP Requestor', () => {
         res.end(body);
       }).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
-        const requestor = new Requestor(apikey, apibase, {cert: null});
-        requestor.request(method, 'notfound', dummy).catch((e) => {
+        const payjp = new Payjp(apikey, {apibase});
+        payjp.charges.list(dummy).catch((e) => {
           assert.strictEqual(e.status, status);
           assert.strictEqual(e.response.body.error.message, 'test');
           assert.strictEqual(e.response.body.error.status, status);
-          assert.strictEqual(e.response.body.error.type, 'not_found_error');
-          server.close();
+          assert.strictEqual(e.response.body.error.type, 'client_error');
           done();
         });
       });
     });
-    it('return 200 by DELETE, but invalid response', (done) => {
-      const method = 'DELETE';
-      const apikey = 'apikey';
-      const encodedKey = Buffer.from(`${apikey}:`).toString('base64');
+    it('return 200 by DELETE, but not json', (done) => {
       const status = 200;
       const server = http.createServer((msg, res) => {
-        assert(!!msg.headers.host);
-        assert.strictEqual(msg.headers['accept-encoding'], 'gzip, deflate');
-        assert.strictEqual(msg.headers['user-agent'].indexOf('node-superagent/'), 0);
-        assert.strictEqual(msg.headers.accept, 'application/json');
-        assert.strictEqual(msg.headers.authorization, 'Basic ' + encodedKey);
-        assert.strictEqual(msg.headers.connection, 'close');
-        assert.strictEqual(msg.method, method);
-        assert.strictEqual(msg.url, '/v1/test');
+        server.close();
+        assert.strictEqual(msg.method, 'DELETE');
+        assert.strictEqual(msg.url, '/v1/plans/hoge');
         res.writeHead(status, {'Content-Type': 'text/plain'});
         res.end('<html></html>');
       }).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
-        const requestor = new Requestor(apikey, apibase, {cert: null});
-        requestor.request(method, 'test').catch((e) => {
-          assert.deepStrictEqual(e, {
-            message: 'Invalid response',
-            status,
-            response: '<html></html>',
-          });
-          server.close();
+        const payjp = new Payjp(apikey, {apibase});
+        payjp.plans.delete('hoge').then((v) => {
+          assert.deepStrictEqual(v, {});
           done();
         });
       });
     });
     it('return Network Error: request ok, but not response', (done) => {
-      const server = http.createServer((msg, res) => {
-        assert(!!msg.headers.host);
+      const server = http.createServer((msg, _) => {
+        server.close();
         return msg.socket.destroy();
       }).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
-        const requestor = new Requestor('', apibase, {cert: null});
-        requestor.request('GET', '').catch((r) => {
+        const payjp = new Payjp(apikey, {apibase});
+        payjp.charges.list().catch((r) => {
           assert.strictEqual(r.status, undefined);
           assert.strictEqual(r.response, undefined);
           assert.strictEqual(r.message, 'socket hang up');
@@ -172,8 +133,8 @@ describe('HTTP Requestor', () => {
       server.listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
         server.close();
-        const requestor = new Requestor('', apibase, {cert: null});
-        requestor.request('GET', '').catch((r) => {
+        const payjp = new Payjp(apikey, {apibase});
+        payjp.charges.list().catch((r) => {
           assert.strictEqual(r.status, undefined);
           assert.strictEqual(r.response, undefined);
           assert.strictEqual(r.message.indexOf('connect ECONNREFUSED'), 0);
@@ -181,6 +142,21 @@ describe('HTTP Requestor', () => {
         });
       });
     });
+    it('return timeout Error', (done) => {
+      const server = http.createServer((_msg, _res) => {
+      }).listen(() => {
+        const apibase = `http://localhost:${server.address().port}/v1`;
+        const timeout = 50;
+        const payjp = new Payjp(apikey, {apibase, timeout});
+        payjp.charges.list().catch((r) => {
+          server.close();
+          assert.strictEqual(r.status, undefined);
+          assert.strictEqual(r.response, undefined);
+          assert.strictEqual(r.message, `Timeout of ${timeout}ms exceeded`);
+          assert.strictEqual(r.timeout, timeout);
+          done();
+        });
+      });
+    });
   });
-
 });

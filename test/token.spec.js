@@ -1,44 +1,27 @@
-import assert from 'power-assert';
+const assert = require('assert');
+const Payjp = require('../built');
+const config = require('./config');
 
-import Requestor from '../built/requestor';
-import Payjp from '../built';
-
-import config from './config';
-
-const payjp = new Payjp(config.auth_key, config);
-
+const payjp = Payjp(config.apikey, config);
+payjp.tokens.request = (...args) => Promise.resolve(args);
 describe('Tokens Resource', () => {
-
-  var _method;
-  var _endpoint;
-
-  before(() => {
-    payjp.tokens.request = (...args) => {
-      _method = args[0];
-      _endpoint = args[1];
-      return Promise.resolve();
-    };
-  });
 
   describe('create', () => {
     it('Sends the correct request', () => {
-      const query = {
-        card: {
-          number: 4242424242424242,
-          exp_month: 12,
-          exp_year: 2035,
-        }
-      };
-      return payjp.tokens.create(query).then(() => {
+      const query = {};
+      const headers = {};
+      return payjp.tokens.create(query, headers).then(([_method, _endpoint, _query, _headers]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'tokens');
+        assert.deepStrictEqual(_query, query);
+        assert.deepStrictEqual(_headers, headers);
       });
     });
   });
 
   describe('retrieve', () => {
     it('Sends the correct request', () => {
-      return payjp.tokens.retrieve('id123').then(() => {
+      return payjp.tokens.retrieve('id123').then(([_method, _endpoint]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'tokens/id123');
       });

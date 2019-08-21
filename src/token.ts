@@ -1,8 +1,8 @@
 import Resource from './resource';
 
-import { TokenResponse } from './interfaces';
+import * as I from './index';
 
-export default class Token extends Resource {
+export default class Tokens extends Resource {
   resource: string;
 
   constructor(payjp) {
@@ -10,12 +10,12 @@ export default class Token extends Resource {
     this.resource = 'tokens';
   }
 
-  create(query: object = {}, headers: object = {}) {
-    return this.request('POST', this.resource, query, headers) as TokenResponse;
+  create(query: object = {}, headers: object = {}): Promise<I.Token> {
+    return this.request('POST', this.resource, query, headers);
   }
 
-  retrieve(id: string) {
-    return this.request('GET', `${this.resource}/${id}`) as TokenResponse;
+  retrieve(id: string): Promise<I.Token> {
+    return this.request('GET', `${this.resource}/${id}`);
   }
 
 }
