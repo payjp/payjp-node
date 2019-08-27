@@ -34,7 +34,7 @@ export default class Resource {
     return headers;
   }
 
-  protected request(method: string, endpoint: string, query: object = {}, headers: object = {}): Promise<any> {
+  protected request<I>(method: string, endpoint: string, query: object = {}, headers: object = {}): Promise<I> {
     const url: string = `${this.payjp.config.apibase}/${endpoint}`;
     const header: object = Object.assign(this.buildHeader(method), headers);
 
@@ -48,6 +48,6 @@ export default class Resource {
       request = request.timeout(this.payjp.config.timeout);
     }
 
-    return request.then((res: superagent.Response): any => res.body)
+    return request.then((res: superagent.Response): I => res.body)
   }
 }
