@@ -6,6 +6,8 @@ import Tokens from './token';
 import Transfers from './transfer';
 import Events from './event';
 import Accounts from './account';
+import Tenants from './tenants';
+import TenantTransfers from './tenantTransfers';
 
 namespace Payjp {
   export interface PayjpStatic {
@@ -23,6 +25,8 @@ namespace Payjp {
     transfers: Transfers,
     events: Events,
     accounts: Accounts,
+    tenants: Tenants,
+    tenant_transfers: TenantTransfers,
   }
 
   export interface PayjpOptions {
@@ -39,6 +43,7 @@ namespace Payjp {
 
   export interface ChargeListOptions extends TransferChargeListOptions {
     subscription?: string,
+    tenant?: string
   }
 
   export interface CustomerSubscriptionListOptions extends ListOptions {
@@ -50,18 +55,23 @@ namespace Payjp {
     customer?: string,
   }
 
-  export interface TransferListOptions extends ListOptions {
-    status?: "pending" | "paid" | "failed" | "stop" | "carried_over",
-  }
-
-  export interface PayjpEventListRequest extends ListOptions {
+  export interface EventListOptions extends ListOptions {
     resource_id?: string,
     object?: string,
     type?: string,
   }
 
+  export interface TransferListOptions extends ListOptions {
+    status?: "pending" | "paid" | "failed" | "stop" | "carried_over",
+  }
+
   export interface TransferChargeListOptions extends ListOptions {
     customer?: string,
+  }
+
+  export interface TenantTransferListOptions extends TransferListOptions {
+    transfer?: string,
+    tenant?: string,
   }
 
   interface OptionsMetadata {
@@ -152,6 +162,29 @@ namespace Payjp {
     prorate?: boolean,
   }
 
+  export interface TenantCreationOptions extends WithMetadata {
+    name: string,
+    id?: string,
+    platform_fee_rate: string | number,
+    minimum_transfer_amount?: number,
+    bank_code?: string,
+    bank_branch_code?: string,
+    bank_account_type?: string,
+    bank_account_number?: string,
+    bank_account_holder_name?: string,
+  }
+
+  export interface TenantUpdateOptions extends WithMetadata {
+    name?: string,
+    platform_fee_rate?: string | number,
+    minimum_transfer_amount?: number,
+    bank_code?: string,
+    bank_branch_code?: string,
+    bank_account_type?: string,
+    bank_account_number?: string,
+    bank_account_holder_name?: string,
+  }
+
   export interface List<T> {
     object: "list",
     count: number,
@@ -181,7 +214,11 @@ namespace Payjp {
     refund_reason: string | null,
     refunded: boolean,
     subscription: string | null,
-    platform_fee: number | null,
+    platform_fee?: number | null,
+    platform_fee_rate?: string | null,
+    total_platform_fee?: number,
+    tenant?: string | null,
+    product?: any,
   }
 
   export interface Customer {
@@ -264,37 +301,43 @@ namespace Payjp {
     used: boolean;
   }
 
-  export interface Transfer {
-    object: "transfer",
+  interface Summary {
+    charge_count: number,
+    charge_fee: number,
+    charge_gross: number,
+    net: number,
+    refund_amount: number,
+    refund_count: number
+  }
+
+  interface TransferBase {
+    object: string,
     amount: number,
     carried_balance: number | null,
     charges: List<Charge>,
     created: number,
-    currency: string,
-    description: string | null,
+    currency: "jpy",
     id: string,
     livemode: boolean,
     scheduled_date: string,
     status: string,
-    summary: {
-      charge_count: number,
-      charge_fee: number,
-      charge_gross: number,
-      net: number,
-      refund_amount: number,
-      refund_count: number
-    },
+    summary: Summary,
     term_end: number,
     term_start: number,
     transfer_amount: number | null,
     transfer_date: number | null,
   }
 
+  export interface Transfer extends TransferBase {
+    object: "transfer",
+    description: string | null,
+  }
+
   export interface Event {
     object: "event",
     livemode: boolean,
     id: string,
-    data: Charge | Customer | Card | Plan | Subscription | Token | Transfer,
+    data: Charge | Customer | Card | Plan | Subscription | Token | Transfer | Tenant | TenantTransfer,
     pending_webhooks: number,
     created: number,
     type: string,
@@ -325,6 +368,48 @@ namespace Payjp {
     product_name: string | null,
     product_type: string[] | null,
     site_published: boolean | null,
+  }
+
+  export interface Tenant {
+    created: number,
+    name: string,
+    id: string,
+    livemode: boolean,
+    metadata: OptionsMetadata | null,
+    object: "tenant",
+    platform_fee_rate: string,
+    minimum_transfer_amount: number,
+    bank_account_number: string,
+    bank_branch_code: string,
+    bank_code: string,
+    bank_account_holder_name: string,
+    bank_account_type: string,
+    bank_account_status: string,
+    currencies_supported: string[],
+    default_currency: "jpy",
+    reviewed_brands: ReviewedBrand[],
+  }
+
+  interface ReviewedBrand {
+    brand: string,
+    status: string,
+    available_date: number | null,
+  }
+
+  export interface ApplicationUrl {
+    object: "application_url",
+    url: string,
+    expires: number,
+  }
+
+  export interface TenantTransfer extends TransferBase {
+    object: "tenant_transfer",
+    tenant_id: string,
+    summary: TenantTransferSummary,
+  }
+
+  interface TenantTransferSummary extends Summary {
+    total_platform_fee: number,
   }
 
   export interface Deleted {
@@ -380,6 +465,8 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     transfers: new Transfers(payjpConfig),
     events: new Events(payjpConfig),
     accounts: new Accounts(payjpConfig),
+    tenants: new Tenants(payjpConfig),
+    'tenant_transfers': new TenantTransfers(payjpConfig),
   };
 }
 

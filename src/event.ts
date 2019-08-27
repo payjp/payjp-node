@@ -9,7 +9,7 @@ export default class Events extends Resource {
     this.resource = 'events';
   }
 
-  list(query: I.PayjpEventListRequest = {}): Promise<I.List<I.Event>> {
+  list(query: I.EventListOptions = {}): Promise<I.List<I.Event>> {
     return this.request('GET', this.resource, query);
   }
 
