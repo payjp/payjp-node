@@ -92,6 +92,7 @@ namespace Payjp {
     capture?: boolean,
     expiry_days?: number,
     platform_fee?: number,
+    tenant?: string,
   }
 
   export interface ChargeUpdateOptions extends WithMetadata {
