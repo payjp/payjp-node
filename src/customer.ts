@@ -22,7 +22,7 @@ class CustomerSubscriptions extends Resource {
 
 export default class Customers extends Resource {
   resource: string;
-  cards: object;
+  cards: Cards;
   subscriptions: object;
 
   constructor(payjp) {
