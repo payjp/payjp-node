@@ -167,6 +167,7 @@ namespace Payjp {
     name: string,
     id?: string,
     platform_fee_rate: string | number,
+    payjp_fee_included?: boolean,
     minimum_transfer_amount?: number,
     bank_code?: string,
     bank_branch_code?: string,
