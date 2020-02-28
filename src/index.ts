@@ -62,7 +62,7 @@ namespace Payjp {
   }
 
   export interface TransferListOptions extends ListOptions {
-    status?: "pending" | "paid" | "failed" | "stop" | "carried_over",
+    status?: "pending" | "paid" | "failed" | "stop" | "carried_over" | "recombination",
   }
 
   export interface TransferChargeListOptions extends ListOptions {
