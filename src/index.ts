@@ -298,9 +298,9 @@ namespace Payjp {
     object: "token",
     card: Card,
     created: number,
-    id: string;
-    livemode: boolean;
-    used: boolean;
+    id: string,
+    livemode: boolean,
+    used: boolean,
   }
 
   interface Summary {
@@ -309,7 +309,9 @@ namespace Payjp {
     charge_gross: number,
     net: number,
     refund_amount: number,
-    refund_count: number
+    refund_count: number,
+    dispute_amount: number,
+    dispute_count: number,
   }
 
   interface TransferBase {
