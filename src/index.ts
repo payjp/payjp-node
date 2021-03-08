@@ -209,6 +209,7 @@ namespace Payjp {
     expired_at: number | null,
     failure_code: string | null,
     failure_message: string | null,
+    fee_rate: string | null,
     id: string,
     livemode: boolean,
     metadata: OptionsMetadata | null,
