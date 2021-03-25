@@ -11,12 +11,13 @@
     "api"
   ],
   "scripts": {
-    "test": "npm run lint && npm run build && npm run mocha",
+    "test": "npm run lint && npm run build && npm run test:typescript && npm run test:mocha",
+    "test:mocha": "mocha --timeout=10000",
+    "test:typescript": "tsc --noEmit test/types/*.ts",
     "build": "tsc",
     "lint": "npm run lint:base -- .",
     "lint:base": "eslint --ignore-path .gitignore --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
-    "mocha": "mocha --timeout=10000",
     "prepublish": "npm run build"
   },
   "repository": {

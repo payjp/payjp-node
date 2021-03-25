@@ -330,7 +330,7 @@ namespace Payjp {
     term_end: number,
     term_start: number,
     transfer_amount: number | null,
-    transfer_date: number | null,
+    transfer_date: string | null,
   }
 
   export interface Transfer extends TransferBase {

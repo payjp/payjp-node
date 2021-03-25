@@ -14,11 +14,11 @@ export default class Transfers extends Resource {
     return this.request('GET', this.resource, query);
   }
 
-  retrieve(id): Promise<I.Transfer> {
+  retrieve(id: string): Promise<I.Transfer> {
     return this.request('GET', `${this.resource}/${id}`);
   }
 
-  charges(id, query: I.TransferChargeListOptions = {}): Promise<I.List<I.Charge>> {
+  charges(id: string, query: I.TransferChargeListOptions = {}): Promise<I.List<I.Charge>> {
     return this.request('GET', `${this.resource}/${id}/charges`, query);
   }
 
