@@ -1,6 +1,6 @@
 # PAY.JP for Node.js
 
-[![Build Status](https://travis-ci.org/payjp/payjp-node.svg?branch=master)](https://travis-ci.org/payjp/payjp-node)
+[![Build Status](https://github.com/payjp/payjp-node/actions/workflows/test.yml/badge.svg)](https://github.com/payjp/payjp-node/actions)
 [![npm](https://img.shields.io/npm/v/payjp.svg)](payjp)
 
 ## Installation
