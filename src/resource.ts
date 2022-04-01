@@ -35,19 +35,36 @@ export default class Resource {
   }
 
   protected request<I>(method: string, endpoint: string, query: object = {}, headers: object = {}): Promise<I> {
-    const url: string = `${this.payjp.config.apibase}/${endpoint}`;
+    const url = `${this.payjp.config.apibase}/${endpoint}`;
     const header: object = Object.assign(this.buildHeader(method), headers);
 
-    let request: superagent.SuperAgentRequest = superagent(method, url).set(header);
-    if (method === 'GET' || method === 'DELETE') {
-      request = request.query(query);
-    } else { // (method === 'POST' || method === 'PUT')
-      request = request.send(query);
-    }
-    if (this.payjp.config.timeout > 0) {
-      request = request.timeout(this.payjp.config.timeout);
+    const doRequest = ():superagent.SuperAgentRequest => {
+      let request: superagent.SuperAgentRequest = superagent(method, url).set(header);
+      if (method === 'GET' || method === 'DELETE') {
+        request = request.query(query);
+      } else { // (method === 'POST' || method === 'PUT')
+        request = request.send(query);
+      }
+      if (this.payjp.config.timeout > 0) {
+        request = request.timeout(this.payjp.config.timeout);
+      }
+      return request
     }
 
-    return request.then((res: superagent.Response): I => res.body)
+    let retryCount = 0;
+    const retry = (resolve: (res: superagent.Response) => void, reject: (reason: any) => void) => doRequest().then((res: superagent.Response) => {
+        if (res.status != 429) {
+          resolve(res);
+        } else if (retryCount != this.payjp.config.max_retry) {
+          const delay = Math.min(this.payjp.config.retry_initial_delay * 2 ** retryCount++, this.payjp.config.retry_max_delay)
+          const delayWithJitter = Math.floor(delay / 2 * (1 + Math.random()))
+          setTimeout(() => retry(resolve, reject), delayWithJitter);
+        } else {
+          resolve(res);
+        }
+    }).catch(reject);
+
+    return new Promise<superagent.Response>(retry).then(res => res.body);
+
   }
 }

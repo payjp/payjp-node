@@ -32,6 +32,9 @@ namespace Payjp {
   export interface PayjpOptions {
     timeout?: number,
     apibase?: string,
+    max_retry?: number,
+    retry_initial_delay?: number,
+    retry_max_delay?: number,
   }
 
   export interface ListOptions {
@@ -458,6 +461,9 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     config: {
       apibase: options.apibase || 'https://api.pay.jp/v1',
       timeout: options.timeout || 0,
+      maxRetry: options.max_retry || 0,
+      retryInitialDelay: options.retry_initial_delay|| 2000,
+      retryMaxDelay: options.retry_max_delay || 32000,
     },
   };
   return {
