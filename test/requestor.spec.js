@@ -33,8 +33,7 @@ describe('Retry delay', () => {
     assert.ok(500 <= r['getCurrentDelay'](0, 1000, 600) <= 600)
     done();
   });
-
-})
+});
 describe('HTTP Requestor', () => {
   const apikey = 'apikey';
   const encodedKey = Buffer.from(apikey + ':').toString('base64');
@@ -70,7 +69,6 @@ describe('HTTP Requestor', () => {
         server.close();
         assert(!!msg.headers.host);
         assert.strictEqual(msg.headers['accept-encoding'], 'gzip, deflate');
-        assert.strictEqual(msg.headers['user-agent'].indexOf('node-superagent/'), 0);
         assert.strictEqual(msg.headers['content-type'], 'application/x-www-form-urlencoded');
         assert(parseInt(msg.headers['content-length'], 10) > 0);
         assert.strictEqual(msg.headers.accept, 'application/json');
@@ -217,7 +215,7 @@ describe('HTTP Requestor', () => {
       const server = createTestServer(statusCodes).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
         const payjp = new Payjp(apikey, {apibase, maxRetry: 3, retryInitialDelay: 10});
-        payjp.charges.create().then((res) => {server.close(); done(res);}).catch((e) => {
+        payjp.charges.create().then((res) => {server.close(); done(res);}).then((e) => { server.close(); done(e)}).catch((e) => {
           server.close();
           assert.strictEqual(e.status, 500);
           done();
