@@ -19,7 +19,22 @@ function createTestServer (statusCodes) {
     res.end(body);
   })
 }
+describe('Retry delay', () => {
+  const r = new Payjp('key', {}).charges
+  it('multiplies by retryCount', (done) => {
+    // 1000 / 2 + 1000 / 2 * Math.random()
+    assert.ok(500 <= r['getCurrentDelay'](0, 1000, 2000) <= 1000)
+    // 1000 * 2 ^ 2 / 2 + ...
+    assert.ok(2000 <= r['getCurrentDelay'](2, 1000, 2000) <= 4000)
+    done();
+  });
+  it('limited by retryMaxDelay', (done) => {
+    // Calcurated range is 500-1000 but the larger end is limited to 600
+    assert.ok(500 <= r['getCurrentDelay'](0, 1000, 600) <= 600)
+    done();
+  });
 
+})
 describe('HTTP Requestor', () => {
   const apikey = 'apikey';
   const encodedKey = Buffer.from(apikey + ':').toString('base64');
@@ -174,10 +189,10 @@ describe('HTTP Requestor', () => {
       });
     });
     it('retries 429 error and success', (done) => {
-      const statusCodes = [429, 200].entries()
+      const statusCodes = [429, 429, 429, 200].entries()
       const server = createTestServer(statusCodes).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
-        const payjp = new Payjp(apikey, {apibase, maxRetry: 4, retryInitialDelay: 100});
+        const payjp = new Payjp(apikey, {apibase, maxRetry: 3, retryInitialDelay: 10});
         payjp.charges.create().then((charge) => {
           server.close();
           assert.strictEqual(charge.id, 'ch_success');
@@ -189,10 +204,22 @@ describe('HTTP Requestor', () => {
       const statusCodes = [429, 429, 429, 200].entries()
       const server = createTestServer(statusCodes).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
-        const payjp = new Payjp(apikey, {apibase, maxRetry: 2, retryInitialDelay: 100});
+        const payjp = new Payjp(apikey, {apibase, maxRetry: 2, retryInitialDelay: 10});
         payjp.charges.create().then((res) => {server.close(); done(res);}).catch((e) => {
           server.close();
           assert.strictEqual(e.status, 429);
+          done();
+        });
+      });
+    });
+    it('stops retrying when error response that not 429 has received', (done) => {
+      const statusCodes = [429, 500, 429, 200].entries()
+      const server = createTestServer(statusCodes).listen(() => {
+        const apibase = `http://localhost:${server.address().port}/v1`;
+        const payjp = new Payjp(apikey, {apibase, maxRetry: 3, retryInitialDelay: 10});
+        payjp.charges.create().then((res) => {server.close(); done(res);}).catch((e) => {
+          server.close();
+          assert.strictEqual(e.status, 500);
           done();
         });
       });

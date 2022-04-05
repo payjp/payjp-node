@@ -34,6 +34,11 @@ export default class Resource {
     return headers;
   }
 
+  private getCurrentDelay(retryCount: number, initialDelay: number, maxDelay: number): number {
+    const delay = Math.min(initialDelay * 2 ** retryCount, maxDelay)
+    return Math.floor(delay / 2 * (1 + Math.random()))
+  }
+
   protected request<I>(method: string, endpoint: string, query: object = {}, headers: object = {}): Promise<I> {
     const url = `${this.payjp.config.apibase}/${endpoint}`;
     const header: object = Object.assign(this.buildHeader(method), headers);
@@ -56,8 +61,8 @@ export default class Resource {
       resolve(res);
     }).catch((res: superagent.Response) => {
         if (res.status == 429 && retryCount < this.payjp.config.maxRetry) {
-          const delay = Math.min(this.payjp.config.retryInitialDelay * 2 ** retryCount++, this.payjp.config.retryMaxDelay)
-          const delayWithJitter = Math.floor(delay / 2 * (1 + Math.random()))
+          const delayWithJitter = this.getCurrentDelay(retryCount, this.payjp.config.retryInitialDelay, this.payjp.config.retryMaxDelay)
+          retryCount++;
           setTimeout(() => retry(resolve, reject), delayWithJitter);
         } else {
           reject(res);
