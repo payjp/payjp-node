@@ -69,6 +69,7 @@ describe('HTTP Requestor', () => {
         server.close();
         assert(!!msg.headers.host);
         assert.strictEqual(msg.headers['accept-encoding'], 'gzip, deflate');
+        assert.strictEqual(msg.headers['user-agent'].indexOf('node-superagent/'), 0);
         assert.strictEqual(msg.headers['content-type'], 'application/x-www-form-urlencoded');
         assert(parseInt(msg.headers['content-length'], 10) > 0);
         assert.strictEqual(msg.headers.accept, 'application/json');
