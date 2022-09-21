@@ -58,13 +58,13 @@ export default class Resource {
 
     let retryCount = 0;
     const retry = (resolve: (res: superagent.Response) => void, reject: (reason: any) => void) => doRequest().then(resolve).catch((res: superagent.Response) => {
-        if (res.status === 429 && retryCount < this.payjp.config.maxRetry) {
-          const delayWithJitter = this.getCurrentDelay(retryCount, this.payjp.config.retryInitialDelay, this.payjp.config.retryMaxDelay)
-          retryCount++;
-          setTimeout(() => retry(resolve, reject), delayWithJitter);
-        } else {
-          return reject(res);
-        }
+      if (res.status === 429 && retryCount < this.payjp.config.maxRetry) {
+        const delayWithJitter = this.getCurrentDelay(retryCount, this.payjp.config.retryInitialDelay, this.payjp.config.retryMaxDelay)
+        retryCount++;
+        setTimeout(() => retry(resolve, reject), delayWithJitter);
+      } else {
+        return reject(res);
+      }
     });
     return new Promise<superagent.Response>(retry).then(res => res.body);
 
