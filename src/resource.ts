@@ -65,7 +65,7 @@ export default class Resource {
           retryCount++;
           setTimeout(() => retry(resolve, reject), delayWithJitter);
         } else {
-          reject(res);
+          return reject(res);
         }
     });
     return new Promise<superagent.Response>(retry).then(res => res.body);
