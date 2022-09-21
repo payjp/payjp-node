@@ -60,7 +60,7 @@ export default class Resource {
     const retry = (resolve: (res: superagent.Response) => void, reject: (reason: any) => void) => doRequest().then((res: superagent.Response) => {
       resolve(res);
     }).catch((res: superagent.Response) => {
-        if (res.status == 429 && retryCount < this.payjp.config.maxRetry) {
+        if (res.status === 429 && retryCount < this.payjp.config.maxRetry) {
           const delayWithJitter = this.getCurrentDelay(retryCount, this.payjp.config.retryInitialDelay, this.payjp.config.retryMaxDelay)
           retryCount++;
           setTimeout(() => retry(resolve, reject), delayWithJitter);
