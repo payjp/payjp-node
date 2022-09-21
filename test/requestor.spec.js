@@ -28,10 +28,9 @@ describe('Retry delay', () => {
     assert.ok(2000 <= r['getCurrentDelay'](2, 1000, 2000) <= 4000)
     done();
   });
-  it('limited by retryMaxDelay', (done) => {
+  it('limited by retryMaxDelay', () => {
     // Calcurated range is 500-1000 but the larger end is limited to 600
     assert.ok(500 <= r['getCurrentDelay'](0, 1000, 600) <= 600)
-    done();
   });
 });
 describe('HTTP Requestor', () => {
