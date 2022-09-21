@@ -216,7 +216,7 @@ describe('HTTP Requestor', () => {
       const server = createTestServer(statusCodes).listen(() => {
         const apibase = `http://localhost:${server.address().port}/v1`;
         const payjp = new Payjp(apikey, {apibase, maxRetry: 3, retryInitialDelay: 10});
-        payjp.charges.create().then((res) => {server.close(); done(res);}).then((e) => { server.close(); done(e)}).catch((e) => {
+        payjp.charges.create().then((e) => { server.close(); done(e)}).catch((e) => {
           server.close();
           assert.strictEqual(e.status, 500);
           done();
