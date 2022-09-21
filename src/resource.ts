@@ -43,7 +43,7 @@ export default class Resource {
     const url = `${this.payjp.config.apibase}/${endpoint}`;
     const header: object = Object.assign(this.buildHeader(method), headers);
 
-    const doRequest = ():superagent.SuperAgentRequest => {
+    const doRequest = (): superagent.SuperAgentRequest => {
       let request: superagent.SuperAgentRequest = superagent(method, url).set(header);
       if (method === 'GET' || method === 'DELETE') {
         request = request.query(query);
