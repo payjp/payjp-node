@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as Payjp from '../../built'
+import * as Payjp from '../../src'
 
 // Payjp.PayjpStatic
 const apikey = 'sk_test_xxx'
