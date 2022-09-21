@@ -8,7 +8,7 @@ function createTestServer (statusCodes) {
   return http.createServer((msg, res) => {
     const status = statusCodes.next().value[1];
     let obj = {}
-    if (status == 200) {
+    if (status === 200) {
       obj['id'] = 'ch_success'
     }
     const body = JSON.stringify(obj)
