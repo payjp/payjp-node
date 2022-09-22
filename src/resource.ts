@@ -34,20 +34,39 @@ export default class Resource {
     return headers;
   }
 
+  private getCurrentDelay(retryCount: number, initialDelay: number, maxDelay: number): number {
+    const delay = Math.min(initialDelay * 2 ** retryCount, maxDelay)
+    return Math.floor(delay / 2 * (1 + Math.random()))
+  }
+
   protected request<I>(method: string, endpoint: string, query: object = {}, headers: object = {}): Promise<I> {
-    const url: string = `${this.payjp.config.apibase}/${endpoint}`;
+    const url = `${this.payjp.config.apibase}/${endpoint}`;
     const header: object = Object.assign(this.buildHeader(method), headers);
 
-    let request: superagent.SuperAgentRequest = superagent(method, url).set(header);
-    if (method === 'GET' || method === 'DELETE') {
-      request = request.query(query);
-    } else { // (method === 'POST' || method === 'PUT')
-      request = request.send(query);
-    }
-    if (this.payjp.config.timeout > 0) {
-      request = request.timeout(this.payjp.config.timeout);
+    const doRequest = (): superagent.SuperAgentRequest => {
+      let request: superagent.SuperAgentRequest = superagent(method, url).set(header);
+      if (method === 'GET' || method === 'DELETE') {
+        request = request.query(query);
+      } else { // (method === 'POST' || method === 'PUT')
+        request = request.send(query);
+      }
+      if (this.payjp.config.timeout > 0) {
+        request = request.timeout(this.payjp.config.timeout);
+      }
+      return request
     }
 
-    return request.then((res: superagent.Response): I => res.body)
+    let retryCount = 0;
+    const retry = (resolve: (res: superagent.Response) => void, reject: (reason: any) => void) => doRequest().then(resolve).catch((res: superagent.Response) => {
+      if (res.status === 429 && retryCount < this.payjp.config.maxRetry) {
+        const delayWithJitter = this.getCurrentDelay(retryCount, this.payjp.config.retryInitialDelay, this.payjp.config.retryMaxDelay)
+        retryCount++;
+        setTimeout(() => retry(resolve, reject), delayWithJitter);
+      } else {
+        return reject(res);
+      }
+    });
+    return new Promise<superagent.Response>(retry).then(res => res.body);
+
   }
 }

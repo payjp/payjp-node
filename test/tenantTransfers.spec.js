@@ -22,7 +22,7 @@ describe('TenantTransfer Resource', () => {
       assert(_endpoint === 'tenant_transfers/id123');
     });
   });
-  ;
+  
 
   it('Sends the correct request on charges', () => {
     const query = {limit: 1};

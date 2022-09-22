@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as Payjp from '../../built'
 
 // Payjp.PayjpStatic
@@ -19,7 +19,7 @@ async function main(): Promise<void> {
     let amount_refunded = 1000
     amount_refunded = charge.amount_refunded
     // and more...
-  } catch(e) {
+  } catch (e) {
     // Error
     const responseError = e as Payjp.ResponseError
     let status: number = responseError.status
@@ -37,5 +37,5 @@ async function main(): Promise<void> {
     let transferDate = '2020-03-21'
     transferDate = transfer.transfer_date
     // and more...
-  } catch(e) {}
+  } catch (e) { }
 }

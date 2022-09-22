@@ -57,3 +57,15 @@ If the response isn't fully downloaded within that time, the request will be abo
 ```js
 const payjp = require('payjp')('sk_...', {timeout: 20 * 1000}); // in ms (this is 20 seconds)
 ```
+
+#### Retry
+
+You can automatically retry the request when the client received HTTP 429 response caused by [Rate Limit](https://pay.jp/docs/api/#rate-limit).
+By default, the retry feature is disabled. To activate, set `maxRetry` for 1 or more.
+
+```js
+const payjp = new Payjp('sk_live_xxx', {maxRetry: 5, retryInitialDelay: 1000, retryMaxDelay: 20 * 1000})
+```
+
+A delay of retry is calculated based on [Exponential backoff with equal jitter](https://aws.amazon.com/jp/blogs/architecture/exponential-backoff-and-jitter/) algorithm.
+Each delay is randomly choiced between "`retryInitialDelay` * 2 ** `retryCount`" and "`retryInitialDelay` * 2 ** `retryCount` / 2" but doesn't exceed `retryMaxDelay`.
