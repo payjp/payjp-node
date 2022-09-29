@@ -228,6 +228,7 @@ namespace Payjp {
     total_platform_fee?: number,
     tenant?: string | null,
     product?: any,
+    three_d_secure_status: string | null,
   }
 
   export interface Customer {
