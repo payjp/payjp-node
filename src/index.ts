@@ -1,13 +1,13 @@
+import Accounts from './account';
 import Charges from './charge';
 import Customers from './customer';
+import Events from './event';
 import Plans from './plan';
 import Subscriptions from './subscription';
-import Tokens from './token';
-import Transfers from './transfer';
-import Events from './event';
-import Accounts from './account';
 import Tenants from './tenants';
 import TenantTransfers from './tenantTransfers';
+import Tokens from './token';
+import Transfers from './transfer';
 
 namespace Payjp {
   export interface PayjpStatic {
@@ -98,6 +98,7 @@ namespace Payjp {
     expiry_days?: number,
     platform_fee?: number,
     tenant?: string,
+    three_d_secure?: boolean,
   }
 
   export interface ChargeUpdateOptions extends WithMetadata {
@@ -227,6 +228,7 @@ namespace Payjp {
     total_platform_fee?: number,
     tenant?: string | null,
     product?: any,
+    three_d_secure_status: string | null,
   }
 
   export interface Customer {
@@ -441,7 +443,7 @@ namespace Payjp {
 
   export interface ResponseError {
     status?: number | undefined,
-    response?: {body?: PayjpError, [propName: string]: any} | undefined,
+    response?: { body?: PayjpError, [propName: string]: any } | undefined,
     message: string,
     timeout?: number,
 
@@ -462,7 +464,7 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
       apibase: options.apibase || 'https://api.pay.jp/v1',
       timeout: options.timeout || 0,
       maxRetry: options.maxRetry || 0,
-      retryInitialDelay: options.retryInitialDelay|| 2000,
+      retryInitialDelay: options.retryInitialDelay || 2000,
       retryMaxDelay: options.retryMaxDelay || 32000,
     },
   };

@@ -65,4 +65,13 @@ describe('Charges Resource', () => {
     });
   });
 
+  describe('tds_finish', () => {
+    it('Sends the correct request', () => {
+      return payjp.charges.tds_finish('id123').then(([_method, _endpoint]) => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'charges/id123/tds_finish');
+      });
+    });
+  });
+
 });

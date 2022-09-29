@@ -1,5 +1,5 @@
-import Resource from './resource';
 import * as I from './index';
+import Resource from './resource';
 
 export default class Charges extends Resource {
 
@@ -36,6 +36,10 @@ export default class Charges extends Resource {
 
   capture(id, query: I.ChargeCaptureOptions = {}): Promise<I.Charge> {
     return this.request('POST', `${this.resource}/${id}/capture`, query);
+  }
+
+  tds_finish(id): Promise<I.Charge> {
+    return this.request('POST', `${this.resource}/${id}/tds_finish`);
   }
 
 }
