@@ -3,6 +3,9 @@ name: release
 on:
   release:
     types: [published]
+  push:
+    branches:
+      - feature-three-d-secure
 
 jobs:
 
