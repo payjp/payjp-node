@@ -265,6 +265,7 @@ namespace Payjp {
     livemode: boolean,
     metadata: OptionsMetadata | null,
     name: string | null,
+    three_d_secure_status: string | null,
   }
 
   export interface Plan {
