@@ -21,18 +21,22 @@ function createTestServer (statusCodes) {
 }
 describe('Retry delay', () => {
   const r = new Payjp('key', {}).charges
-  it('multiplies by retryCount', (done) => {
-    // 1000 / 2 + 1000 / 2 * Math.random()
-    assert.ok(500 <= r['getCurrentDelay'](0, 1000, 2000) <= 1000)
-    // 1000 * 2 ^ 2 / 2 + ...
-    assert.ok(2000 <= r['getCurrentDelay'](2, 1000, 2000) <= 4000)
-    done();
-  });
+  it('multiplies by retryCount', () => {
+    let got = r['getCurrentDelay'](0, 1000, 2000)
+    assert.ok(500 <= got)
+    assert.ok(got <= 1000)
+
+    got = r['getCurrentDelay'](2, 1000, 2000)
+    assert.ok(1000 <= got)
+    assert.ok(got <= 2000)
+  })
   it('limited by retryMaxDelay', () => {
     // Calcurated range is 500-1000 but the larger end is limited to 600
-    assert.ok(500 <= r['getCurrentDelay'](0, 1000, 600) <= 600)
-  });
-});
+    let got = r['getCurrentDelay'](0, 1000, 600)
+    assert.ok(300 <= got)
+    assert.ok(got <= 600)
+  })
+})
 describe('HTTP Requestor', () => {
   const apikey = 'apikey';
   const encodedKey = Buffer.from(apikey + ':').toString('base64');
