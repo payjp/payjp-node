@@ -36,7 +36,7 @@ export default class Resource {
 
   private getCurrentDelay(retryCount: number, initialDelay: number, maxDelay: number): number {
     const delay = Math.min(initialDelay * 2 ** retryCount, maxDelay)
-    return Math.floor(delay / 2 * (1 + Math.random()))
+    return Math.ceil(delay / 2 * (1 + Math.random()))
   }
 
   protected request<I>(method: string, endpoint: string, query: object = {}, headers: object = {}): Promise<I> {
