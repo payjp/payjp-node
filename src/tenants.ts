@@ -18,11 +18,11 @@ export default class Tenants extends Resource {
     return this.request('POST', this.resource, query);
   }
 
-  retrieve(id): Promise<I.Tenant> {
+  retrieve(id: string): Promise<I.Tenant> {
     return this.request('GET', `${this.resource}/${id}`);
   }
 
-  update(id, query: I.TenantUpdateOptions = {}): Promise<I.Tenant> {
+  update(id: string, query: I.TenantUpdateOptions = {}): Promise<I.Tenant> {
     return this.request('POST', `${this.resource}/${id}`, query);
   }
 

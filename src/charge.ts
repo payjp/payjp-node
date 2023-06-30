@@ -18,27 +18,27 @@ export default class Charges extends Resource {
     return this.request('POST', this.resource, query);
   }
 
-  retrieve(id): Promise<I.Charge> {
+  retrieve(id: string): Promise<I.Charge> {
     return this.request('GET', `${this.resource}/${id}`);
   }
 
-  update(id, query: I.ChargeUpdateOptions = {}): Promise<I.Charge> {
+  update(id: string, query: I.ChargeUpdateOptions = {}): Promise<I.Charge> {
     return this.request('POST', `${this.resource}/${id}`, query);
   }
 
-  refund(id, query: I.RefundCreationOptions = {}): Promise<I.Charge> {
+  refund(id: string, query: I.RefundCreationOptions = {}): Promise<I.Charge> {
     return this.request('POST', `${this.resource}/${id}/refund`, query);
   }
 
-  reauth(id, query: I.ChargeReauthOptions = {}): Promise<I.Charge> {
+  reauth(id: string, query: I.ChargeReauthOptions = {}): Promise<I.Charge> {
     return this.request('POST', `${this.resource}/${id}/reauth`, query);
   }
 
-  capture(id, query: I.ChargeCaptureOptions = {}): Promise<I.Charge> {
+  capture(id: string, query: I.ChargeCaptureOptions = {}): Promise<I.Charge> {
     return this.request('POST', `${this.resource}/${id}/capture`, query);
   }
 
-  tds_finish(id): Promise<I.Charge> {
+  tds_finish(id: string): Promise<I.Charge> {
     return this.request('POST', `${this.resource}/${id}/tds_finish`);
   }
 
