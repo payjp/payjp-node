@@ -8,6 +8,7 @@ import Tenants from './tenants';
 import TenantTransfers from './tenantTransfers';
 import Tokens from './token';
 import Transfers from './transfer';
+import Statements from './statement';
 
 namespace Payjp {
   export interface PayjpStatic {
@@ -27,6 +28,7 @@ namespace Payjp {
     accounts: Accounts,
     tenants: Tenants,
     tenant_transfers: TenantTransfers,
+    statements: Statements,
   }
 
   export interface PayjpOptions {
@@ -191,6 +193,10 @@ namespace Payjp {
     bank_account_type?: string,
     bank_account_number?: string,
     bank_account_holder_name?: string,
+  }
+
+  export interface StatementUrlOptions {
+    platformer?: boolean,
   }
 
   export interface List<T> {
@@ -400,7 +406,31 @@ namespace Payjp {
     bank_account_status: string,
     currencies_supported: string[],
     default_currency: "jpy",
+    payjp_fee_included: boolean,
     reviewed_brands: ReviewedBrand[],
+  }
+
+  export interface Statement {
+    created: number,
+    id: string,
+    livemode: boolean,
+    object: "statement",
+    items: List<StatementItems>,
+  }
+
+  export interface StatementItems {
+    subject: "gross_sales" | "fee" | "platform_fee" | "gross_refund" | "refund_fee_offset" |
+      "refund_platform_fee_offset" | "chargeback" | "chargeback_fee_offset" | "chargeback_platform_fee_offset" |
+      "proplan" | "transfer_fee",
+    amount: number,
+    name: string,
+    tax_rate: string,
+  }
+
+  export interface StatementUrl {
+    object: "statement_url",
+    url: string,
+    expires: number,
   }
 
   interface ReviewedBrand {
@@ -483,6 +513,7 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     accounts: new Accounts(payjpConfig),
     tenants: new Tenants(payjpConfig),
     'tenant_transfers': new TenantTransfers(payjpConfig),
+    statements: new Statements(payjpConfig),
   };
 }
 

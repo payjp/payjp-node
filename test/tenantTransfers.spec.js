@@ -22,7 +22,7 @@ describe('TenantTransfer Resource', () => {
       assert(_endpoint === 'tenant_transfers/id123');
     });
   });
-  
+
 
   it('Sends the correct request on charges', () => {
     const query = {limit: 1};
@@ -33,4 +33,12 @@ describe('TenantTransfer Resource', () => {
     });
   });
 
+  it('Sends the correct request on statementUrls', () => {
+    const query = {platformer: true};
+    return payjp.tenant_transfers.statementUrls('id123', query).then(([_method, _endpoint, _query]) => {
+      assert(_method === 'POST');
+      assert(_endpoint === 'tenant_transfers/id123/statement_urls');
+      assert.deepStrictEqual(_query, query);
+    });
+  });
 });
