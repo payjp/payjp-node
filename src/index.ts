@@ -368,6 +368,7 @@ namespace Payjp {
     email: string,
     id: string,
     merchant: Merchant,
+    team_id: string,
   }
 
   export interface Merchant {
