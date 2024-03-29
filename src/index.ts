@@ -10,6 +10,7 @@ import Tokens from './token';
 import Transfers from './transfer';
 import Statements from './statement';
 import Terms from "./term";
+import Balances from "./balance";
 
 namespace Payjp {
   export interface PayjpStatic {
@@ -31,6 +32,7 @@ namespace Payjp {
     tenant_transfers: TenantTransfers,
     statements: Statements,
     terms: Terms,
+    balances: Balances,
   }
 
   export interface PayjpOptions {
@@ -80,6 +82,15 @@ namespace Payjp {
 
   export interface TenantTransferListOptions extends TransferListOptions {
     transfer?: string,
+    tenant?: string,
+  }
+
+  export interface BalanceListOptions extends ListOptions {
+    since_due_date?: number,
+    until_due_date?: number,
+    type?: string,
+    closed?: boolean,
+    owner?: "merchant" | "tenant",
     tenant?: string,
   }
 
@@ -462,12 +473,38 @@ namespace Payjp {
     created: number,
     id: string,
     livemode: boolean,
-    object: 'term',
+    object: "term",
     charge_count: number,
     refund_count: number,
     dispute_count: number,
     end_at: number,
     start_at: number,
+  }
+
+  export interface Balance {
+    "created": number,
+    "id": string,
+    "livemode": boolean,
+    "net": number,
+    "object": "balance",
+    "type": string,
+    "statements": {
+      count: number,
+      data: Statement[],
+      has_more: false,
+      object: "list",
+      url: string
+    },
+    "closed": boolean,
+    "due_date": null | number,
+    "bank_info": null | {
+      "bank_code": string,
+      "bank_branch_code": string,
+      "bank_account_type": string,
+      "bank_account_number": string,
+      "bank_account_holder_name": string,
+      "bank_account_status": "success" | "failed" | "pending",
+    }
   }
 
   export interface Deleted {
@@ -530,6 +567,7 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     'tenant_transfers': new TenantTransfers(payjpConfig),
     statements: new Statements(payjpConfig),
     terms: new Terms(payjpConfig),
+    balances: new Balances(payjpConfig),
   };
 }
 
