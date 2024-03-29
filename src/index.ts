@@ -9,6 +9,7 @@ import TenantTransfers from './tenantTransfers';
 import Tokens from './token';
 import Transfers from './transfer';
 import Statements from './statement';
+import Terms from "./term";
 
 namespace Payjp {
   export interface PayjpStatic {
@@ -29,6 +30,7 @@ namespace Payjp {
     tenants: Tenants,
     tenant_transfers: TenantTransfers,
     statements: Statements,
+    terms: Terms,
   }
 
   export interface PayjpOptions {
@@ -456,6 +458,18 @@ namespace Payjp {
     total_platform_fee: number,
   }
 
+  export interface Term {
+    created: number,
+    id: string,
+    livemode: boolean,
+    object: 'term',
+    charge_count: number,
+    refund_count: number,
+    dispute_count: number,
+    end_at: number,
+    start_at: number,
+  }
+
   export interface Deleted {
     deleted: boolean,
     id: string,
@@ -515,6 +529,7 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     tenants: new Tenants(payjpConfig),
     'tenant_transfers': new TenantTransfers(payjpConfig),
     statements: new Statements(payjpConfig),
+    terms: new Terms(payjpConfig),
   };
 }
 
