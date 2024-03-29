@@ -429,6 +429,8 @@ namespace Payjp {
     id: string,
     livemode: boolean,
     object: "statement",
+    term: Term | null,
+    balance_id: string,
     items: List<StatementItems>,
   }
 
