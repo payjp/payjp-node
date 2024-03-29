@@ -248,6 +248,7 @@ namespace Payjp {
     tenant?: string | null,
     product?: any,
     three_d_secure_status: string | null,
+    term_id: string | null,
   }
 
   export interface Customer {
