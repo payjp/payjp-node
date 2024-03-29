@@ -493,7 +493,7 @@ namespace Payjp {
     "type": string,
     "statements": {
       count: number,
-      data: Statement[],
+      data: List<Statement>,
       has_more: false,
       object: "list",
       url: string
