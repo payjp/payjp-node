@@ -9,7 +9,7 @@ export default class Terms extends Resource {
     this.resource = 'terms';
   }
 
-  list(query: I.ListOptions = {}): Promise<I.List<I.Term>> {
+  list(query: I.TermListOptions = {}): Promise<I.List<I.Term>> {
     return this.request('GET', this.resource, query);
   }
 

@@ -84,6 +84,10 @@ namespace Payjp {
     transfer?: string,
     tenant?: string,
   }
+  export interface TermListOptions extends ListOptions {
+    since_start_at?: number,
+    until_start_at?: number,
+  }
 
   export interface BalanceListOptions extends ListOptions {
     since_due_date?: number,
