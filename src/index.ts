@@ -449,7 +449,8 @@ namespace Payjp {
     net: number,
     term: Term | null,
     balance_id: string,
-    items: List<StatementItems>,
+    items: StatementItems[],
+    updated: number,
   }
 
   export interface StatementItems {
@@ -516,13 +517,7 @@ namespace Payjp {
     net: number,
     object: "balance",
     state: "collecting" | "transfer" | "claim",
-    statements: {
-      count: number,
-      data: List<Statement>,
-      has_more: false,
-      object: "list",
-      url: string
-    },
+    statements: Statement[],
     closed: boolean,
     due_date: null | number,
     tenant_id: string,
