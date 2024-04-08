@@ -489,31 +489,31 @@ namespace Payjp {
   }
 
   export interface BankInfo {
-    "bank_code": string;
-    "bank_branch_code": string;
-    "bank_account_type": string;
-    "bank_account_number": string;
-    "bank_account_holder_name": string;
-    "bank_account_status": "success" | "failed" | "pending";
+    bank_code: string;
+    bank_branch_code: string;
+    bank_account_type: string;
+    bank_account_number: string;
+    bank_account_holder_name: string;
+    bank_account_status: "success" | "failed" | "pending";
   }
 
   export interface Balance {
-    "created": number,
-    "id": string,
-    "livemode": boolean,
-    "net": number,
-    "object": "balance",
-    "type": string,
-    "statements": {
+    created: number,
+    id: string,
+    livemode: boolean,
+    net: number,
+    object: "balance",
+    type: string,
+    statements: {
       count: number,
       data: List<Statement>,
       has_more: false,
       object: "list",
       url: string
     },
-    "closed": boolean,
-    "due_date": null | number,
-    "bank_info": null | BankInfo
+    closed: boolean,
+    due_date: null | number,
+    bank_info: null | BankInfo
   }
 
   export interface Deleted {
