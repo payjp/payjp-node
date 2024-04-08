@@ -84,6 +84,15 @@ namespace Payjp {
     transfer?: string,
     tenant?: string,
   }
+
+  export interface StatementListOptions extends ListOptions {
+    owner?: "merchant" | "tenant",
+    source_transfer?: string,
+    tenant?: string,
+    term?: string,
+    type?: "sales" | "service_fee" | "transfer_fee",
+  }
+
   export interface TermListOptions extends ListOptions {
     since_start_at?: number,
     until_start_at?: number,
@@ -92,7 +101,7 @@ namespace Payjp {
   export interface BalanceListOptions extends ListOptions {
     since_due_date?: number,
     until_due_date?: number,
-    type?: string,
+    state?: "collecting" | "transfer" | "claim",
     closed?: boolean,
     owner?: "merchant" | "tenant",
     tenant?: string,
@@ -434,6 +443,10 @@ namespace Payjp {
     id: string,
     livemode: boolean,
     object: "statement",
+    title: string,
+    tenant_id: string,
+    type: "sales" | "service_fee" | "transfer_fee",
+    net: number,
     term: Term | null,
     balance_id: string,
     items: List<StatementItems>,
@@ -477,7 +490,6 @@ namespace Payjp {
   }
 
   export interface Term {
-    created: number,
     id: string,
     livemode: boolean,
     object: "term",
@@ -503,7 +515,7 @@ namespace Payjp {
     livemode: boolean,
     net: number,
     object: "balance",
-    type: string,
+    state: "collecting" | "transfer" | "claim",
     statements: {
       count: number,
       data: List<Statement>,
@@ -513,6 +525,7 @@ namespace Payjp {
     },
     closed: boolean,
     due_date: null | number,
+    tenant_id: string,
     bank_info: null | BankInfo
   }
 
