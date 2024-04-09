@@ -43,9 +43,12 @@ namespace Payjp {
     retryMaxDelay?: number,
   }
 
-  export interface ListOptions {
+  export interface PaginationOptions {
     limit?: number,
     offset?: number,
+  }
+
+  export interface ListOptions extends PaginationOptions {
     since?: number,
     until?: number,
   }
@@ -93,7 +96,7 @@ namespace Payjp {
     type?: "sales" | "service_fee" | "transfer_fee",
   }
 
-  export interface TermListOptions extends ListOptions {
+  export interface TermListOptions extends PaginationOptions {
     since_start_at?: number,
     until_start_at?: number,
   }
