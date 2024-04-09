@@ -9,6 +9,8 @@ import TenantTransfers from './tenantTransfers';
 import Tokens from './token';
 import Transfers from './transfer';
 import Statements from './statement';
+import Terms from "./term";
+import Balances from "./balance";
 
 namespace Payjp {
   export interface PayjpStatic {
@@ -29,6 +31,8 @@ namespace Payjp {
     tenants: Tenants,
     tenant_transfers: TenantTransfers,
     statements: Statements,
+    terms: Terms,
+    balances: Balances,
   }
 
   export interface PayjpOptions {
@@ -39,9 +43,12 @@ namespace Payjp {
     retryMaxDelay?: number,
   }
 
-  export interface ListOptions {
+  export interface PaginationOptions {
     limit?: number,
     offset?: number,
+  }
+
+  export interface ListOptions extends PaginationOptions {
     since?: number,
     until?: number,
   }
@@ -78,6 +85,28 @@ namespace Payjp {
 
   export interface TenantTransferListOptions extends TransferListOptions {
     transfer?: string,
+    tenant?: string,
+  }
+
+  export interface StatementListOptions extends ListOptions {
+    owner?: "merchant" | "tenant",
+    source_transfer?: string,
+    tenant?: string,
+    term?: string,
+    type?: "sales" | "service_fee" | "transfer_fee",
+  }
+
+  export interface TermListOptions extends PaginationOptions {
+    since_start_at?: number,
+    until_start_at?: number,
+  }
+
+  export interface BalanceListOptions extends ListOptions {
+    since_due_date?: number,
+    until_due_date?: number,
+    state?: "collecting" | "transfer" | "claim",
+    closed?: boolean,
+    owner?: "merchant" | "tenant",
     tenant?: string,
   }
 
@@ -235,6 +264,7 @@ namespace Payjp {
     tenant?: string | null,
     product?: any,
     three_d_secure_status: string | null,
+    term_id: string | null,
   }
 
   export interface Customer {
@@ -416,7 +446,14 @@ namespace Payjp {
     id: string,
     livemode: boolean,
     object: "statement",
-    items: List<StatementItems>,
+    title: string,
+    tenant_id: string,
+    type: "sales" | "service_fee" | "transfer_fee",
+    net: number,
+    term: Term | null,
+    balance_id: string,
+    items: StatementItems[],
+    updated: number,
   }
 
   export interface StatementItems {
@@ -454,6 +491,40 @@ namespace Payjp {
 
   interface TenantTransferSummary extends Summary {
     total_platform_fee: number,
+  }
+
+  export interface Term {
+    id: string,
+    livemode: boolean,
+    object: "term",
+    charge_count: number,
+    refund_count: number,
+    dispute_count: number,
+    end_at: number,
+    start_at: number,
+  }
+
+  export interface BankInfo {
+    bank_code: string;
+    bank_branch_code: string;
+    bank_account_type: string;
+    bank_account_number: string;
+    bank_account_holder_name: string;
+    bank_account_status: "success" | "failed" | "pending";
+  }
+
+  export interface Balance {
+    created: number,
+    id: string,
+    livemode: boolean,
+    net: number,
+    object: "balance",
+    state: "collecting" | "transfer" | "claim",
+    statements: Statement[],
+    closed: boolean,
+    due_date: null | number,
+    tenant_id: string,
+    bank_info: null | BankInfo
   }
 
   export interface Deleted {
@@ -515,6 +586,8 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     tenants: new Tenants(payjpConfig),
     'tenant_transfers': new TenantTransfers(payjpConfig),
     statements: new Statements(payjpConfig),
+    terms: new Terms(payjpConfig),
+    balances: new Balances(payjpConfig),
   };
 }
 

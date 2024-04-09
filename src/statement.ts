@@ -9,7 +9,7 @@ export default class Statements extends Resource {
     this.resource = 'statements';
   }
 
-  list(query: I.TenantTransferListOptions = {}): Promise<I.List<I.Statement>> {
+  list(query: I.StatementListOptions = {}): Promise<I.List<I.Statement>> {
     return this.request('GET', this.resource, query);
   }
 
