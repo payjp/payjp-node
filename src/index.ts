@@ -55,7 +55,8 @@ namespace Payjp {
 
   export interface ChargeListOptions extends TransferChargeListOptions {
     subscription?: string,
-    tenant?: string
+    tenant?: string,
+    term?: string,
   }
 
   export interface CustomerSubscriptionListOptions extends ListOptions {
