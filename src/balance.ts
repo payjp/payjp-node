@@ -16,4 +16,8 @@ export default class Balances extends Resource {
   retrieve(id: string): Promise<I.Balance> {
     return this.request('GET', `${this.resource}/${id}`);
   }
+
+  statementUrls(id: string, query: I.StatementUrlOptions = {}): Promise<I.StatementUrl> {
+    return this.request('POST', `${this.resource}/${id}/statement_urls`, query);
+  }
 }
