@@ -94,7 +94,7 @@ namespace Payjp {
     source_transfer?: string,
     tenant?: string,
     term?: string,
-    type?: "sales" | "service_fee" | "transfer_fee",
+    type?: "sales" | "service_fee" | "transfer_fee" | "misc",
   }
 
   export interface TermListOptions extends PaginationOptions {
@@ -449,7 +449,7 @@ namespace Payjp {
     object: "statement",
     title: string,
     tenant_id: string,
-    type: "sales" | "service_fee" | "transfer_fee",
+    type: "sales" | "service_fee" | "transfer_fee" | "misc",
     net: number,
     term: Term | null,
     balance_id: string,
