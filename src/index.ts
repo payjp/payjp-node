@@ -443,24 +443,34 @@ namespace Payjp {
   }
 
   export interface Statement {
-    created: number,
-    id: string,
-    livemode: boolean,
     object: "statement",
+    livemode: boolean,
+    id: string,
     title: string,
-    tenant_id: string,
     type: "sales" | "service_fee" | "transfer_fee" | "misc",
-    net: number,
-    term: Term | null,
-    balance_id: string,
-    items: StatementItems[],
+    created: number,
     updated: number,
+    tenant_id: string | null,
+    term: Term | null,
+    balance_id: string | null,
+    items: StatementItems[],
+    net: number,
   }
 
   export interface StatementItems {
-    subject: "gross_sales" | "fee" | "platform_fee" | "gross_refund" | "refund_fee_offset" |
-      "refund_platform_fee_offset" | "chargeback" | "chargeback_fee_offset" | "chargeback_platform_fee_offset" |
-      "proplan" | "transfer_fee",
+    subject: "gross_sales"
+      | "fee"
+      | "platform_fee"
+      | "gross_refund"
+      | "refund_fee_offset"
+      | "refund_platform_fee_offset"
+      | "chargeback"
+      | "chargeback_fee_offset"
+      | "chargeback_platform_fee_offset"
+      | "proplan"
+      | "plan_fee"
+      | "transfer_fee"
+      | "other",
     amount: number,
     name: string,
     tax_rate: string,
@@ -495,14 +505,15 @@ namespace Payjp {
   }
 
   export interface Term {
+    object: "term",
     id: string,
     livemode: boolean,
-    object: "term",
+    start_at: number | null,
+    end_at: number | null,
+    closed: boolean,
     charge_count: number,
     refund_count: number,
     dispute_count: number,
-    end_at: number,
-    start_at: number,
   }
 
   export interface BankInfo {
@@ -515,16 +526,17 @@ namespace Payjp {
   }
 
   export interface Balance {
-    created: number,
+    object: "balance",
     id: string,
     livemode: boolean,
+    created: number,
+    tenant_id: string | null,
     net: number,
-    object: "balance",
-    state: "collecting" | "transfer" | "claim",
     statements: Statement[],
+    state: "collecting" | "transfer" | "claim",
     closed: boolean,
+    closed_date: number | null,
     due_date: null | number,
-    tenant_id: string,
     bank_info: null | BankInfo
   }
 
