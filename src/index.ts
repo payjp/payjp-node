@@ -508,7 +508,7 @@ namespace Payjp {
     object: "term",
     id: string,
     livemode: boolean,
-    start_at: number | null,
+    start_at: number,
     end_at: number | null,
     closed: boolean,
     charge_count: number,
