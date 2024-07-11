@@ -509,7 +509,7 @@ namespace Payjp {
     id: string,
     livemode: boolean,
     start_at: number,
-    end_at: number,
+    end_at: number | null,
     closed: boolean,
     charge_count: number,
     refund_count: number,
