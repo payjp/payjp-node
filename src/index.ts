@@ -303,6 +303,8 @@ namespace Payjp {
     metadata: OptionsMetadata | null,
     name: string | null,
     three_d_secure_status: string | null,
+    email: string | null,
+    phone: string | null,
   }
 
   export interface Plan {
