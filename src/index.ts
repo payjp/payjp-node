@@ -449,7 +449,7 @@ namespace Payjp {
     livemode: boolean,
     id: string,
     title: string,
-    type: "sales" | "service_fee" | "transfer_fee" | "misc",
+    type: "sales" | "service_fee" | "transfer_fee" | "forfeit" | "misc",
     created: number,
     updated: number,
     tenant_id: string | null,
@@ -471,6 +471,8 @@ namespace Payjp {
       | "chargeback_platform_fee_offset"
       | "proplan"
       | "plan_fee"
+      | "forfeit"
+      | "reallocation"
       | "transfer_fee"
       | "other",
     amount: number,
