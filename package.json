@@ -1,6 +1,6 @@
 {
   "name": "payjp",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "PAY.JP node.js bindings",
   "main": "built/index.js",
   "types": "built/index.d.ts",
