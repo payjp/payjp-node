@@ -11,6 +11,7 @@ import Transfers from './transfer';
 import Statements from './statement';
 import Terms from "./term";
 import Balances from "./balance";
+import ThreeDSecureRequests from "./threeDSecureRequest";
 
 namespace Payjp {
   export interface PayjpStatic {
@@ -33,6 +34,7 @@ namespace Payjp {
     statements: Statements,
     terms: Terms,
     balances: Balances,
+    three_d_secure_requests: ThreeDSecureRequests,
   }
 
   export interface PayjpOptions {
@@ -546,6 +548,31 @@ namespace Payjp {
     bank_info: null | BankInfo
   }
 
+  export interface ThreeDSecureRequest {
+    object: 'three_d_secure_request',
+    id: string,
+    resource_id: string,
+    livemode: boolean,
+    created: number,
+    state: 'created' | 'in_progress' | 'result_received' | 'finished',
+    started_at: null | number,
+    result_received_at: null | number,
+    finished_at: null | number,
+    expired_at: null | number,
+    tenant_id: null | string,
+    three_d_secure_status: ThreeDSecureStatus,
+  }
+
+  export interface ThreeDSecureRequestCreationOptions {
+    resource_id: string,
+    tenant_id?: string,
+  }
+
+  export interface ThreeDSecureRequestListOptions extends ListOptions {
+    resource_id?: string,
+    tenant_id?: string,
+  }
+
   export interface Deleted {
     deleted: boolean,
     id: string,
@@ -607,6 +634,7 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     statements: new Statements(payjpConfig),
     terms: new Terms(payjpConfig),
     balances: new Balances(payjpConfig),
+    three_d_secure_requests: new ThreeDSecureRequests(payjpConfig),
   };
 }
 
