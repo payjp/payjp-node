@@ -237,6 +237,8 @@ namespace Payjp {
     url: string
   }
 
+  type ThreeDSecureStatus = null | 'unverified' | 'verified' | 'attempted' | 'failed' | 'error';
+
   export interface Charge {
     object: "charge",
     amount: number,
@@ -264,7 +266,7 @@ namespace Payjp {
     total_platform_fee?: number,
     tenant?: string | null,
     product?: any,
-    three_d_secure_status: string | null,
+    three_d_secure_status: ThreeDSecureStatus,
     term_id: string | null,
   }
 
