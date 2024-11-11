@@ -28,4 +28,13 @@ describe('Tokens Resource', () => {
     });
   });
 
+  describe('tds_finish', () => {
+    it('Sends the correct request', () => {
+      return payjp.tokens.tds_finish('id123').then(([_method, _endpoint]) => {
+        assert(_method === 'POST');
+        assert(_endpoint === 'tokens/id123/tds_finish');
+      });
+    });
+  });
+
 });
