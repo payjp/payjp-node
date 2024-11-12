@@ -18,4 +18,8 @@ export default class Tokens extends Resource {
     return this.request('GET', `${this.resource}/${id}`);
   }
 
+  tds_finish(id: string): Promise<I.Token> {
+    return this.request('POST', `${this.resource}/${id}/tds_finish`);
+  }
+
 }
