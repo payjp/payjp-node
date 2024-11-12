@@ -22,9 +22,10 @@ describe('ThreeDSecureRequest Resource', () => {
       const query = {
         resource_id: 'car_xxxxxxxxxxxxxxxxxxxxxxxxx'
       };
-      return payjp.three_d_secure_requests.create(query).then(([_method, _endpoint]) => {
+      return payjp.three_d_secure_requests.create(query).then(([_method, _endpoint, _query]) => {
         assert(_method === 'POST');
         assert(_endpoint === 'three_d_secure_requests');
+        assert.deepStrictEqual(_query, query);
       });
     });
   });
