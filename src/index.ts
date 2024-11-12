@@ -1,6 +1,6 @@
 import Accounts from './accounts';
 import Charges from './charges';
-import Customers from './customer';
+import Customers from './customers';
 import Events from './events';
 import Plans from './plans';
 import Subscriptions from './subscriptions';
