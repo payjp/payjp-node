@@ -306,7 +306,7 @@ namespace Payjp {
     livemode: boolean,
     metadata: OptionsMetadata | null,
     name: string | null,
-    three_d_secure_status: string | null,
+    three_d_secure_status: ThreeDSecureStatus,
     email: string | null,
     phone: string | null,
   }
