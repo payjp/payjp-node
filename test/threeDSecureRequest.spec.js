@@ -8,9 +8,11 @@ payjp.three_d_secure_requests.request = (...args) => Promise.resolve(args);
 describe('ThreeDSecureRequest Resource', () => {
   describe('list', () => {
     it('Sends the correct request', () => {
-      return payjp.three_d_secure_requests.list().then(([_method, _endpoint]) => {
+      const query = {limit: 1};
+      return payjp.three_d_secure_requests.list(query).then(([_method, _endpoint, _query]) => {
         assert(_method === 'GET');
         assert(_endpoint === 'three_d_secure_requests');
+        assert.deepStrictEqual(_query, query);
       });
     });
   });
