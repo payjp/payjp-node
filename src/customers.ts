@@ -1,5 +1,5 @@
 import Resource from './resource';
-import Cards from './card';
+import Cards from './cards';
 import * as I from './index';
 
 class CustomerSubscriptions extends Resource {
