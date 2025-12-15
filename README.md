@@ -69,3 +69,7 @@ const payjp = new Payjp('sk_live_xxx', {maxRetry: 5, retryInitialDelay: 1000, re
 
 A delay of retry is calculated based on [Exponential backoff with equal jitter](https://aws.amazon.com/jp/blogs/architecture/exponential-backoff-and-jitter/) algorithm.
 Each delay is randomly choiced between "`retryInitialDelay` * 2 ** `retryCount`" and "`retryInitialDelay` * 2 ** `retryCount` / 2" but doesn't exceed `retryMaxDelay`.
+
+## Contributors
+
+See the [list of contributors](https://github.com/payjp/payjp-node/graphs/contributors) who participated in this project.

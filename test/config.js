@@ -1,4 +1,4 @@
 module.exports = {
-  apikey: 'sk_test',
+  apikey: "sk_test",
   config: {},
 };

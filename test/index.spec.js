@@ -1,17 +1,20 @@
-const assert = require('assert');
-const Payjp = require('../built');
+const assert = require("node:assert");
+const Payjp = require("../built");
 
-describe('Payjp', () => {
-  it('can construct myself', () => {
-    const payjp = Payjp('sk_test');
-    assert(payjp.apikey === 'sk_test');
-    assert(typeof payjp.charges.create === 'function');
+describe("Payjp", () => {
+  it("can construct myself", () => {
+    const payjp = Payjp("sk_test");
+    assert(payjp.apikey === "sk_test");
+    assert(typeof payjp.charges.create === "function");
 
-    const payjpWithConfig = Payjp('sk_test', {apibase: 'http://localhost:8080/', timeout: 2000});
-    assert(payjpWithConfig.config.apibase === 'http://localhost:8080/');
+    const payjpWithConfig = Payjp("sk_test", {
+      apibase: "http://localhost:8080/",
+      timeout: 2000,
+    });
+    assert(payjpWithConfig.config.apibase === "http://localhost:8080/");
     assert(payjpWithConfig.config.timeout === 2000);
   });
-  it('cannot construct myself without apikey', () => {
+  it("cannot construct myself without apikey", () => {
     assert.throws(() => {
       Payjp();
     }, /^Error: Please set apikey.$/);
@@ -19,12 +22,12 @@ describe('Payjp', () => {
       Payjp(null);
     }, /^Error: Please set apikey.$/);
     assert.throws(() => {
-      Payjp('');
+      Payjp("");
     }, /^Error: Please set apikey.$/);
   });
-  it('cannot construct myself with public apikey', () => {
+  it("cannot construct myself with public apikey", () => {
     assert.throws(() => {
-      Payjp('pk_test');
+      Payjp("pk_test");
     }, /^Error: You cannot use the public apikey in this SDK.$/);
   });
 });
