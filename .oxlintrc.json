@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-unused-vars": ["warn", { "caughtErrorsIgnorePattern": "^_", "argsIgnorePattern": "^_" }]
+  },
+  "ignorePatterns": ["node_modules", "built", "pnpm-lock.yaml"]
+}

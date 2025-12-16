@@ -1,116 +1,114 @@
-import Accounts from './account';
-import Charges from './charge';
-import Customers from './customer';
-import Events from './event';
-import Plans from './plan';
-import Subscriptions from './subscription';
-import Tenants from './tenants';
-import TenantTransfers from './tenantTransfers';
-import Tokens from './token';
-import Transfers from './transfer';
-import Statements from './statement';
-import Terms from "./term";
+import Accounts from "./account";
 import Balances from "./balance";
+import Charges from "./charge";
+import Customers from "./customer";
+import Events from "./event";
+import Plans from "./plan";
+import Statements from "./statement";
+import Subscriptions from "./subscription";
+import Tenants from "./tenants";
+import TenantTransfers from "./tenantTransfers";
+import Terms from "./term";
 import ThreeDSecureRequests from "./threeDSecureRequest";
+import Tokens from "./token";
+import Transfers from "./transfer";
 
 namespace Payjp {
-  export interface PayjpStatic {
-    (apikey: string, options?: PayjpOptions): Payjp;
-  }
+  export type PayjpStatic = (apikey: string, options?: PayjpOptions) => Payjp;
 
   export interface Payjp {
-    apikey: string,
-    config: PayjpOptions,
-    charges: Charges,
-    customers: Customers,
-    plans: Plans,
-    subscriptions: Subscriptions,
-    tokens: Tokens,
-    transfers: Transfers,
-    events: Events,
-    accounts: Accounts,
-    tenants: Tenants,
-    tenant_transfers: TenantTransfers,
-    statements: Statements,
-    terms: Terms,
-    balances: Balances,
-    three_d_secure_requests: ThreeDSecureRequests,
+    apikey: string;
+    config: PayjpOptions;
+    charges: Charges;
+    customers: Customers;
+    plans: Plans;
+    subscriptions: Subscriptions;
+    tokens: Tokens;
+    transfers: Transfers;
+    events: Events;
+    accounts: Accounts;
+    tenants: Tenants;
+    tenant_transfers: TenantTransfers;
+    statements: Statements;
+    terms: Terms;
+    balances: Balances;
+    three_d_secure_requests: ThreeDSecureRequests;
   }
 
   export interface PayjpOptions {
-    timeout?: number,
-    apibase?: string,
-    maxRetry?: number,
-    retryInitialDelay?: number,
-    retryMaxDelay?: number,
+    timeout?: number;
+    apibase?: string;
+    maxRetry?: number;
+    retryInitialDelay?: number;
+    retryMaxDelay?: number;
   }
 
   export interface PaginationOptions {
-    limit?: number,
-    offset?: number,
+    limit?: number;
+    offset?: number;
   }
 
   export interface ListOptions extends PaginationOptions {
-    since?: number,
-    until?: number,
+    since?: number;
+    until?: number;
   }
 
   export interface ChargeListOptions extends TransferChargeListOptions {
-    subscription?: string,
-    tenant?: string,
-    term?: string,
+    subscription?: string;
+    tenant?: string;
+    term?: string;
   }
 
   export interface CustomerSubscriptionListOptions extends ListOptions {
-    plan?: string,
-    status?: "trial" | "active" | "canceled" | "paused",
+    plan?: string;
+    status?: "trial" | "active" | "canceled" | "paused";
   }
 
   export interface SubscriptionListOptions extends CustomerSubscriptionListOptions {
-    customer?: string,
+    customer?: string;
   }
 
   export interface EventListOptions extends ListOptions {
-    resource_id?: string,
-    object?: string,
-    type?: string,
+    resource_id?: string;
+    object?: string;
+    type?: string;
   }
 
   export interface TransferListOptions extends ListOptions {
-    status?: "pending" | "paid" | "failed" | "stop" | "carried_over" | "recombination",
-    since_scheduled_date?: number,
-    until_scheduled_date?: number,
+    status?: "pending" | "paid" | "failed" | "stop" | "carried_over" | "recombination";
+    since_scheduled_date?: number;
+    until_scheduled_date?: number;
   }
 
   export interface TransferChargeListOptions extends ListOptions {
-    customer?: string,
+    customer?: string;
   }
 
   export interface TenantTransferListOptions extends TransferListOptions {
-    transfer?: string,
-    tenant?: string,
+    transfer?: string;
+    tenant?: string;
   }
 
   export interface StatementListOptions extends ListOptions {
-    owner?: "merchant" | "tenant",
-    source_transfer?: string,
-    tenant?: string,
-    term?: string,
-    type?: "sales" | "service_fee" | "transfer_fee" | "misc",
+    owner?: "merchant" | "tenant";
+    source_transfer?: string;
+    tenant?: string;
+    term?: string;
+    type?: "sales" | "service_fee" | "transfer_fee" | "misc";
   }
 
   export interface TermListOptions extends PaginationOptions {
-    since_start_at?: number,
-    until_start_at?: number,
+    since_start_at?: number;
+    until_start_at?: number;
   }
 
   export interface BalanceListOptions extends ListOptions {
-    since_due_date?: number,
-    until_due_date?: number,
-    state?: "collecting" | "transfer" | "claim",
-    closed?: boolean,
-    owner?: "merchant" | "tenant",
-    tenant?: string,
+    since_due_date?: number;
+    until_due_date?: number;
+    state?: "collecting" | "transfer" | "claim";
+    closed?: boolean;
+    owner?: "merchant" | "tenant";
+    tenant?: string;
   }
 
   interface OptionsMetadata {
@@ -122,197 +120,197 @@ namespace Payjp {
   }
 
   export interface ChargeCreationOptions extends WithMetadata {
-    amount?: number,
-    currency?: "jpy",
-    product?: string,
-    customer?: string,
-    card?: string,
-    description?: string,
-    capture?: boolean,
-    expiry_days?: number,
-    platform_fee?: number,
-    tenant?: string,
-    three_d_secure?: boolean,
+    amount?: number;
+    currency?: "jpy";
+    product?: string;
+    customer?: string;
+    card?: string;
+    description?: string;
+    capture?: boolean;
+    expiry_days?: number;
+    platform_fee?: number;
+    tenant?: string;
+    three_d_secure?: boolean;
   }
 
   export interface ChargeUpdateOptions extends WithMetadata {
-    description?: string,
+    description?: string;
   }
 
   export interface ChargeReauthOptions {
-    expiry_days?: number,
+    expiry_days?: number;
   }
 
   export interface ChargeCaptureOptions {
-    amount?: number,
+    amount?: number;
   }
 
   export interface RefundCreationOptions {
-    amount?: number,
-    refund_reason?: string,
+    amount?: number;
+    refund_reason?: string;
   }
 
   export interface CustomerCreationOptions extends WithMetadata {
-    email?: string,
-    description?: string,
-    id?: string,
-    card?: string,
+    email?: string;
+    description?: string;
+    id?: string;
+    card?: string;
   }
 
   export interface CustomerUpdateOptions extends WithMetadata {
-    email?: string,
-    description?: string,
-    default_card?: string,
-    card?: string,
+    email?: string;
+    description?: string;
+    default_card?: string;
+    card?: string;
   }
 
   export interface PlanCreationOptions extends WithMetadata {
-    amount: number,
-    currency: "jpy",
-    interval: "month" | "year",
-    id?: string,
-    name?: string,
-    trial_days?: number,
-    billing_day?: number,
+    amount: number;
+    currency: "jpy";
+    interval: "month" | "year";
+    id?: string;
+    name?: string;
+    trial_days?: number;
+    billing_day?: number;
   }
 
   export interface PlanUpdateOptions extends WithMetadata {
-    name?: string,
+    name?: string;
   }
 
   export interface SubscriptionCreationOptions extends WithMetadata {
-    customer: string,
-    plan: string,
-    trial_end?: number | "now",
-    prorate?: boolean,
+    customer: string;
+    plan: string;
+    trial_end?: number | "now";
+    prorate?: boolean;
   }
 
   export interface SubscriptionUpdateOptions extends WithMetadata {
-    trial_end?: number | "now",
-    plan?: string,
-    prorate?: boolean,
-    next_cycle_plan?: string,
+    trial_end?: number | "now";
+    plan?: string;
+    prorate?: boolean;
+    next_cycle_plan?: string;
   }
 
   export interface SubscriptionResumeOptions {
-    trial_end?: number | "now",
-    prorate?: boolean,
+    trial_end?: number | "now";
+    prorate?: boolean;
   }
 
   export interface SubscriptionDeleteOptions {
-    prorate?: boolean,
+    prorate?: boolean;
   }
 
   export interface TenantCreationOptions extends WithMetadata {
-    name: string,
-    id?: string,
-    platform_fee_rate: string | number,
-    payjp_fee_included?: boolean,
-    minimum_transfer_amount?: number,
-    bank_code?: string,
-    bank_branch_code?: string,
-    bank_account_type?: string,
-    bank_account_number?: string,
-    bank_account_holder_name?: string,
+    name: string;
+    id?: string;
+    platform_fee_rate: string | number;
+    payjp_fee_included?: boolean;
+    minimum_transfer_amount?: number;
+    bank_code?: string;
+    bank_branch_code?: string;
+    bank_account_type?: string;
+    bank_account_number?: string;
+    bank_account_holder_name?: string;
   }
 
   export interface TenantUpdateOptions extends WithMetadata {
-    name?: string,
-    platform_fee_rate?: string | number,
-    minimum_transfer_amount?: number,
-    bank_code?: string,
-    bank_branch_code?: string,
-    bank_account_type?: string,
-    bank_account_number?: string,
-    bank_account_holder_name?: string,
+    name?: string;
+    platform_fee_rate?: string | number;
+    minimum_transfer_amount?: number;
+    bank_code?: string;
+    bank_branch_code?: string;
+    bank_account_type?: string;
+    bank_account_number?: string;
+    bank_account_holder_name?: string;
   }
 
   export interface StatementUrlOptions {
-    platformer?: boolean,
+    platformer?: boolean;
   }
 
   export interface List<T> {
-    object: "list",
-    count: number,
-    data: T[],
-    has_more: boolean,
-    url: string
+    object: "list";
+    count: number;
+    data: T[];
+    has_more: boolean;
+    url: string;
   }
 
-  type ThreeDSecureStatus = null | 'unverified' | 'verified' | 'attempted' | 'failed' | 'error';
+  type ThreeDSecureStatus = null | "unverified" | "verified" | "attempted" | "failed" | "error";
 
   export interface Charge {
-    object: "charge",
-    amount: number,
-    amount_refunded: number,
-    captured: boolean,
-    captured_at: number | null,
-    card: Card | null,
-    created: number,
-    currency: string,
-    customer: string | null,
-    description: string | null,
-    expired_at: number | null,
-    failure_code: string | null,
-    failure_message: string | null,
-    fee_rate: string | null,
-    id: string,
-    livemode: boolean,
-    metadata: OptionsMetadata | null,
-    paid: boolean,
-    refund_reason: string | null,
-    refunded: boolean,
-    subscription: string | null,
-    platform_fee?: number | null,
-    platform_fee_rate?: string | null,
-    total_platform_fee?: number,
-    tenant?: string | null,
-    product?: any,
-    three_d_secure_status: ThreeDSecureStatus,
-    term_id: string | null,
+    object: "charge";
+    amount: number;
+    amount_refunded: number;
+    captured: boolean;
+    captured_at: number | null;
+    card: Card | null;
+    created: number;
+    currency: string;
+    customer: string | null;
+    description: string | null;
+    expired_at: number | null;
+    failure_code: string | null;
+    failure_message: string | null;
+    fee_rate: string | null;
+    id: string;
+    livemode: boolean;
+    metadata: OptionsMetadata | null;
+    paid: boolean;
+    refund_reason: string | null;
+    refunded: boolean;
+    subscription: string | null;
+    platform_fee?: number | null;
+    platform_fee_rate?: string | null;
+    total_platform_fee?: number;
+    tenant?: string | null;
+    product?: any;
+    three_d_secure_status: ThreeDSecureStatus;
+    term_id: string | null;
   }
 
   export interface Customer {
-    object: "customer",
-    cards: List<Card>,
-    created: number,
-    default_card: string | null,
-    description: string,
-    email: string | null,
-    id: string,
-    livemode: boolean,
-    metadata: OptionsMetadata | null,
-    subscriptions: List<Subscription>,
+    object: "customer";
+    cards: List<Card>;
+    created: number;
+    default_card: string | null;
+    description: string;
+    email: string | null;
+    id: string;
+    livemode: boolean;
+    metadata: OptionsMetadata | null;
+    subscriptions: List<Subscription>;
   }
 
   export interface Card {
-    object: "card",
-    address_city: string | null,
-    address_line1: string | null,
-    address_line2: string | null,
-    address_state: string | null,
-    address_zip: string | null,
-    address_zip_check: string,
-    brand: string,
-    country: string | null,
-    created: number,
-    customer: string | null,
-    cvc_check: string,
-    exp_month: number,
-    exp_year: number,
-    fingerprint: string,
-    id: string,
-    last4: string,
-    livemode: boolean,
-    metadata: OptionsMetadata | null,
-    name: string | null,
-    three_d_secure_status: ThreeDSecureStatus,
-    email: string | null,
-    phone: string | null,
+    object: "card";
+    address_city: string | null;
+    address_line1: string | null;
+    address_line2: string | null;
+    address_state: string | null;
+    address_zip: string | null;
+    address_zip_check: string;
+    brand: string;
+    country: string | null;
+    created: number;
+    customer: string | null;
+    cvc_check: string;
+    exp_month: number;
+    exp_year: number;
+    fingerprint: string;
+    id: string;
+    last4: string;
+    livemode: boolean;
+    metadata: OptionsMetadata | null;
+    name: string | null;
+    three_d_secure_status: ThreeDSecureStatus;
+    email: string | null;
+    phone: string | null;
   }
 
   export interface Plan {
-    object: "plan",
+    object: "plan";
     amount: number;
     billing_day: number | null;
     created: number;
@@ -326,145 +324,155 @@ namespace Payjp {
   }
 
   export interface Subscription {
-    object: "subscription",
-    canceled_at: number | null,
-    created: number,
-    current_period_end: number,
-    current_period_start: number,
-    customer: string,
-    id: string,
-    livemode: boolean,
-    metadata: OptionsMetadata | null,
-    next_cycle_plan: Plan | null,
-    paused_at: number | null,
-    plan: Plan,
-    prorate: boolean,
-    resumed_at: number | null,
-    start: number,
-    status: string,
-    trial_end: number | null,
-    trial_start: number | null,
+    object: "subscription";
+    canceled_at: number | null;
+    created: number;
+    current_period_end: number;
+    current_period_start: number;
+    customer: string;
+    id: string;
+    livemode: boolean;
+    metadata: OptionsMetadata | null;
+    next_cycle_plan: Plan | null;
+    paused_at: number | null;
+    plan: Plan;
+    prorate: boolean;
+    resumed_at: number | null;
+    start: number;
+    status: string;
+    trial_end: number | null;
+    trial_start: number | null;
   }
 
   export interface Token {
-    object: "token",
-    card: Card,
-    created: number,
-    id: string,
-    livemode: boolean,
-    used: boolean,
+    object: "token";
+    card: Card;
+    created: number;
+    id: string;
+    livemode: boolean;
+    used: boolean;
   }
 
   interface Summary {
-    charge_count: number,
-    charge_fee: number,
-    charge_gross: number,
-    net: number,
-    refund_amount: number,
-    refund_count: number,
-    dispute_amount: number,
-    dispute_count: number,
+    charge_count: number;
+    charge_fee: number;
+    charge_gross: number;
+    net: number;
+    refund_amount: number;
+    refund_count: number;
+    dispute_amount: number;
+    dispute_count: number;
   }
 
   interface TransferBase {
-    object: string,
-    amount: number,
-    carried_balance: number | null,
-    charges: List<Charge>,
-    created: number,
-    currency: "jpy",
-    id: string,
-    livemode: boolean,
-    scheduled_date: string,
-    status: string,
-    summary: Summary,
-    term_end: number,
-    term_start: number,
-    transfer_amount: number | null,
-    transfer_date: string | null,
+    object: string;
+    amount: number;
+    carried_balance: number | null;
+    charges: List<Charge>;
+    created: number;
+    currency: "jpy";
+    id: string;
+    livemode: boolean;
+    scheduled_date: string;
+    status: string;
+    summary: Summary;
+    term_end: number;
+    term_start: number;
+    transfer_amount: number | null;
+    transfer_date: string | null;
   }
 
   export interface Transfer extends TransferBase {
-    object: "transfer",
-    description: string | null,
+    object: "transfer";
+    description: string | null;
   }
 
   export interface Event {
-    object: "event",
-    livemode: boolean,
-    id: string,
-    data: Charge | Customer | Card | Plan | Subscription | Token | Transfer | Tenant | TenantTransfer,
-    pending_webhooks: number,
-    created: number,
-    type: string,
+    object: "event";
+    livemode: boolean;
+    id: string;
+    data:
+      | Charge
+      | Customer
+      | Card
+      | Plan
+      | Subscription
+      | Token
+      | Transfer
+      | Tenant
+      | TenantTransfer;
+    pending_webhooks: number;
+    created: number;
+    type: string;
   }
 
   export interface Account {
-    object: "account",
-    created: number,
-    email: string,
-    id: string,
-    merchant: Merchant,
-    team_id: string,
+    object: "account";
+    created: number;
+    email: string;
+    id: string;
+    merchant: Merchant;
+    team_id: string;
   }
 
   export interface Merchant {
-    object: "merchant",
-    bank_enabled: boolean,
-    brands_accepted: string[],
-    business_type: string | null,
-    charge_type: string[] | null,
-    country: string | null,
-    created: number,
-    currencies_supported: string[],
-    default_currency: string,
-    details_submitted: boolean,
-    id: string,
-    livemode_activated_at: number | null,
-    livemode_enabled: boolean,
-    product_name: string | null,
-    product_type: string[] | null,
-    site_published: boolean | null,
+    object: "merchant";
+    bank_enabled: boolean;
+    brands_accepted: string[];
+    business_type: string | null;
+    charge_type: string[] | null;
+    country: string | null;
+    created: number;
+    currencies_supported: string[];
+    default_currency: string;
+    details_submitted: boolean;
+    id: string;
+    livemode_activated_at: number | null;
+    livemode_enabled: boolean;
+    product_name: string | null;
+    product_type: string[] | null;
+    site_published: boolean | null;
   }
 
   export interface Tenant {
-    created: number,
-    name: string,
-    id: string,
-    livemode: boolean,
-    metadata: OptionsMetadata | null,
-    object: "tenant",
-    platform_fee_rate: string,
-    minimum_transfer_amount: number,
-    bank_account_number: string,
-    bank_branch_code: string,
-    bank_code: string,
-    bank_account_holder_name: string,
-    bank_account_type: string,
-    bank_account_status: string,
-    currencies_supported: string[],
-    default_currency: "jpy",
-    payjp_fee_included: boolean,
-    reviewed_brands: ReviewedBrand[],
+    created: number;
+    name: string;
+    id: string;
+    livemode: boolean;
+    metadata: OptionsMetadata | null;
+    object: "tenant";
+    platform_fee_rate: string;
+    minimum_transfer_amount: number;
+    bank_account_number: string;
+    bank_branch_code: string;
+    bank_code: string;
+    bank_account_holder_name: string;
+    bank_account_type: string;
+    bank_account_status: string;
+    currencies_supported: string[];
+    default_currency: "jpy";
+    payjp_fee_included: boolean;
+    reviewed_brands: ReviewedBrand[];
   }
 
   export interface Statement {
-    object: "statement",
-    livemode: boolean,
-    id: string,
-    title: string,
-    type: "sales" | "service_fee" | "transfer_fee" | "forfeit" | "misc",
-    created: number,
-    updated: number,
-    tenant_id: string | null,
-    term: Term | null,
-    balance_id: string | null,
-    items: StatementItems[],
-    net: number,
+    object: "statement";
+    livemode: boolean;
+    id: string;
+    title: string;
+    type: "sales" | "service_fee" | "transfer_fee" | "forfeit" | "misc";
+    created: number;
+    updated: number;
+    tenant_id: string | null;
+    term: Term | null;
+    balance_id: string | null;
+    items: StatementItems[];
+    net: number;
   }
 
   export interface StatementItems {
-    subject: "gross_sales"
+    subject:
+      | "gross_sales"
       | "fee"
       | "platform_fee"
       | "gross_refund"
@@ -478,50 +486,50 @@ namespace Payjp {
       | "forfeit"
       | "reallocation"
       | "transfer_fee"
-      | "other",
-    amount: number,
-    name: string,
-    tax_rate: string,
+      | "other";
+    amount: number;
+    name: string;
+    tax_rate: string;
   }
 
   export interface StatementUrl {
-    object: "statement_url",
-    url: string,
-    expires: number,
+    object: "statement_url";
+    url: string;
+    expires: number;
   }
 
   interface ReviewedBrand {
-    brand: string,
-    status: string,
-    available_date: number | null,
+    brand: string;
+    status: string;
+    available_date: number | null;
   }
 
   export interface ApplicationUrl {
-    object: "application_url",
-    url: string,
-    expires: number,
+    object: "application_url";
+    url: string;
+    expires: number;
   }
 
   export interface TenantTransfer extends TransferBase {
-    object: "tenant_transfer",
-    tenant_id: string,
-    summary: TenantTransferSummary,
+    object: "tenant_transfer";
+    tenant_id: string;
+    summary: TenantTransferSummary;
   }
 
   interface TenantTransferSummary extends Summary {
-    total_platform_fee: number,
+    total_platform_fee: number;
   }
 
   export interface Term {
-    object: "term",
-    id: string,
-    livemode: boolean,
-    start_at: number,
-    end_at: number | null,
-    closed: boolean,
-    charge_count: number,
-    refund_count: number,
-    dispute_count: number,
+    object: "term";
+    id: string;
+    livemode: boolean;
+    start_at: number;
+    end_at: number | null;
+    closed: boolean;
+    charge_count: number;
+    refund_count: number;
+    dispute_count: number;
   }
 
   export interface BankInfo {
@@ -534,83 +542,86 @@ namespace Payjp {
   }
 
   export interface Balance {
-    object: "balance",
-    id: string,
-    livemode: boolean,
-    created: number,
-    tenant_id: string | null,
-    net: number,
-    statements: Statement[],
-    state: "collecting" | "transfer" | "claim",
-    closed: boolean,
-    closed_date: number | null,
-    due_date: null | number,
-    bank_info: null | BankInfo
+    object: "balance";
+    id: string;
+    livemode: boolean;
+    created: number;
+    tenant_id: string | null;
+    net: number;
+    statements: Statement[];
+    state: "collecting" | "transfer" | "claim";
+    closed: boolean;
+    closed_date: number | null;
+    due_date: null | number;
+    bank_info: null | BankInfo;
   }
 
   export interface ThreeDSecureRequest {
-    object: 'three_d_secure_request',
-    id: string,
-    resource_id: string,
-    livemode: boolean,
-    created: number,
-    state: 'created' | 'in_progress' | 'result_received' | 'finished',
-    started_at: null | number,
-    result_received_at: null | number,
-    finished_at: null | number,
-    expired_at: null | number,
-    tenant_id: null | string,
-    three_d_secure_status: ThreeDSecureStatus,
+    object: "three_d_secure_request";
+    id: string;
+    resource_id: string;
+    livemode: boolean;
+    created: number;
+    state: "created" | "in_progress" | "result_received" | "finished";
+    started_at: null | number;
+    result_received_at: null | number;
+    finished_at: null | number;
+    expired_at: null | number;
+    tenant_id: null | string;
+    three_d_secure_status: ThreeDSecureStatus;
   }
 
   export interface ThreeDSecureRequestCreationOptions {
-    resource_id: string,
-    tenant_id?: string,
+    resource_id: string;
+    tenant_id?: string;
   }
 
   export interface ThreeDSecureRequestListOptions extends ListOptions {
-    resource_id?: string,
-    tenant_id?: string,
+    resource_id?: string;
+    tenant_id?: string;
   }
 
   export interface Deleted {
-    deleted: boolean,
-    id: string,
-    livemode: boolean,
+    deleted: boolean;
+    id: string;
+    livemode: boolean;
   }
 
   export interface PayjpError {
     error: {
-      message: string,
-      type: string,
-      status: number,
-      code?: string,
-      param?: string,
-      charge?: string,
-    }
+      message: string;
+      type: string;
+      status: number;
+      code?: string;
+      param?: string;
+      charge?: string;
+    };
   }
 
   export interface ResponseError {
-    status?: number | undefined,
-    response?: { body?: PayjpError, [propName: string]: any } | undefined,
-    message: string,
-    timeout?: number,
+    status?: number | undefined;
+    response?: { body?: PayjpError; [propName: string]: any } | undefined;
+    message: string;
+    timeout?: number;
 
-    [propName: string]: any,
+    [propName: string]: any;
   }
 }
 
-const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpOptions = {}): Payjp.Payjp {
+const Payjp: Payjp.PayjpStatic = function (
+  apikey: string,
+  options: Payjp.PayjpOptions = {},
+): Payjp.Payjp {
   if (!apikey) {
-    throw new Error('Please set apikey.');
-  } else if (apikey.indexOf('pk_') === 0) {
-    throw new Error('You cannot use the public apikey in this SDK.');
+    throw new Error("Please set apikey.");
+  } else if (apikey.indexOf("pk_") === 0) {
+    throw new Error("You cannot use the public apikey in this SDK.");
   }
 
   const payjpConfig = {
     apikey,
     config: {
-      apibase: options.apibase || 'https://api.pay.jp/v1',
+      apibase: options.apibase || "https://api.pay.jp/v1",
       timeout: options.timeout || 0,
       maxRetry: options.maxRetry || 0,
       retryInitialDelay: options.retryInitialDelay || 2000,
@@ -618,9 +629,7 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     },
   };
   return {
-    apikey,
-    // todo not using spread operator for Node.js v6 support
-    config: payjpConfig.config,
+    ...payjpConfig,
     charges: new Charges(payjpConfig),
     customers: new Customers(payjpConfig),
     plans: new Plans(payjpConfig),
@@ -630,12 +639,12 @@ const Payjp: Payjp.PayjpStatic = function (apikey: string, options: Payjp.PayjpO
     events: new Events(payjpConfig),
     accounts: new Accounts(payjpConfig),
     tenants: new Tenants(payjpConfig),
-    'tenant_transfers': new TenantTransfers(payjpConfig),
+    tenant_transfers: new TenantTransfers(payjpConfig),
     statements: new Statements(payjpConfig),
     terms: new Terms(payjpConfig),
     balances: new Balances(payjpConfig),
     three_d_secure_requests: new ThreeDSecureRequests(payjpConfig),
   };
-}
+};
 
 export = Payjp;

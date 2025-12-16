@@ -1,25 +1,23 @@
-import Resource from './resource';
-
-import * as I from './index';
+import type * as I from "./index";
+import Resource from "./resource";
 
 export default class Tokens extends Resource {
   resource: string;
 
   constructor(payjp) {
     super(payjp);
-    this.resource = 'tokens';
+    this.resource = "tokens";
   }
 
   create(query: object = {}, headers: object = {}): Promise<I.Token> {
-    return this.request('POST', this.resource, query, headers);
+    return this.request("POST", this.resource, query, headers);
   }
 
   retrieve(id: string): Promise<I.Token> {
-    return this.request('GET', `${this.resource}/${id}`);
+    return this.request("GET", `${this.resource}/${id}`);
   }
 
   tds_finish(id: string): Promise<I.Token> {
-    return this.request('POST', `${this.resource}/${id}/tds_finish`);
+    return this.request("POST", `${this.resource}/${id}/tds_finish`);
   }
-
 }

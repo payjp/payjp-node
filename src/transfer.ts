@@ -1,25 +1,23 @@
-import Resource from './resource';
-
-import * as I from './index';
+import type * as I from "./index";
+import Resource from "./resource";
 
 export default class Transfers extends Resource {
   resource: string;
 
   constructor(payjp) {
     super(payjp);
-    this.resource = 'transfers';
+    this.resource = "transfers";
   }
 
   list(query: I.TransferListOptions = {}): Promise<I.List<I.Transfer>> {
-    return this.request('GET', this.resource, query);
+    return this.request("GET", this.resource, query);
   }
 
   retrieve(id: string): Promise<I.Transfer> {
-    return this.request('GET', `${this.resource}/${id}`);
+    return this.request("GET", `${this.resource}/${id}`);
   }
 
   charges(id: string, query: I.TransferChargeListOptions = {}): Promise<I.List<I.Charge>> {
-    return this.request('GET', `${this.resource}/${id}/charges`, query);
+    return this.request("GET", `${this.resource}/${id}/charges`, query);
   }
-
 }
