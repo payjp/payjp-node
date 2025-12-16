@@ -1,4 +1,4 @@
-import Cards from "./card";
+import Cards from "./cards";
 import type * as I from "./index";
 import Resource from "./resource";
 

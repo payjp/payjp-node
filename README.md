@@ -9,10 +9,6 @@
 npm install --save payjp
 ```
 
-## Dependencies
-
-- [superagent](https://visionmedia.github.io/superagent/)
-
 ## Documentation
 
 * [API Documentation](https://pay.jp/docs/api/?javascript)
