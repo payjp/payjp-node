@@ -1,17 +1,17 @@
-import Accounts from "./account";
-import Balances from "./balance";
-import Charges from "./charge";
-import Customers from "./customer";
-import Events from "./event";
-import Plans from "./plan";
-import Statements from "./statement";
-import Subscriptions from "./subscription";
+import Accounts from "./accounts";
+import Balances from "./balances";
+import Charges from "./charges";
+import Customers from "./customers";
+import Events from "./events";
+import Plans from "./plans";
+import Statements from "./statements";
+import Subscriptions from "./subscriptions";
 import Tenants from "./tenants";
 import TenantTransfers from "./tenantTransfers";
-import Terms from "./term";
-import ThreeDSecureRequests from "./threeDSecureRequest";
-import Tokens from "./token";
-import Transfers from "./transfer";
+import Terms from "./terms";
+import ThreeDSecureRequests from "./threeDSecureRequests";
+import Tokens from "./tokens";
+import Transfers from "./transfers";
 
 namespace Payjp {
   export type PayjpStatic = (apikey: string, options?: PayjpOptions) => Payjp;
