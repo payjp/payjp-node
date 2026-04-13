@@ -33,9 +33,9 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.1",
-    "mocha": "^6.0.2",
-    "oxfmt": "^0.16.0",
-    "oxlint": "^1.31.0",
+    "mocha": "^11.7.5",
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
     "typescript": "^5.7.2"
   }
 }
