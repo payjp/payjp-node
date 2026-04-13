@@ -38,6 +38,33 @@ export default class Resource {
     return Math.ceil((delay / 2) * (1 + Math.random()));
   }
 
+  private isPlainObject(value: unknown): value is Record<string, unknown> {
+    return Object.prototype.toString.call(value) === "[object Object]";
+  }
+
+  private appendFormValue(params: URLSearchParams, key: string, value: unknown): void {
+    if (value === undefined) {
+      return;
+    }
+
+    if (this.isPlainObject(value)) {
+      for (const [nestedKey, nestedValue] of Object.entries(value)) {
+        this.appendFormValue(params, `${key}[${nestedKey}]`, nestedValue);
+      }
+      return;
+    }
+
+    params.append(key, String(value));
+  }
+
+  private serializeQuery(query: object): URLSearchParams {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) {
+      this.appendFormValue(params, key, value);
+    }
+    return params;
+  }
+
   protected request<I>(
     method: string,
     endpoint: string,
@@ -56,14 +83,14 @@ export default class Resource {
       // Set query parameters or request body
       if (method === "GET" || method === "DELETE") {
         // For GET and DELETE, add query parameters to URL
-        const params = new URLSearchParams(query as Record<string, string>);
+        const params = this.serializeQuery(query);
         const queryString = params.toString();
         if (queryString) {
           url = `${url}?${queryString}`;
         }
       } else {
         // For POST and PUT, send as request body
-        const body = new URLSearchParams(query as Record<string, string>);
+        const body = this.serializeQuery(query);
         fetchOptions.body = body.toString();
       }
 
