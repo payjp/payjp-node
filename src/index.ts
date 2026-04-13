@@ -307,6 +307,7 @@ namespace Payjp {
     three_d_secure_status: ThreeDSecureStatus;
     email: string | null;
     phone: string | null;
+    is_jp: boolean;
   }
 
   export interface Plan {
