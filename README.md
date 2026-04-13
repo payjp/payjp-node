@@ -26,6 +26,13 @@ payjp.charges.create({
   currency: 'jpy',
   card: 'token_id_by_Checkout_or_payjp.js'
 }).then(console.log).catch(console.error);
+
+payjp.charges.create({
+  amount: 1000,
+  currency: 'jpy',
+  customer: 'cus_xxx',
+  metadata: { user_id: 123 }
+}).then(console.log).catch(console.error);
 ```
 
 Typescript

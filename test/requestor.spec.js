@@ -112,6 +112,74 @@ describe("HTTP Requestor", () => {
           });
         });
     });
+    it("serializes nested object values for POST bodies", (done) => {
+      const dummy = {
+        amount: 100,
+        metadata: { user: 121899 },
+      };
+      const status = 200;
+      const server = http
+        .createServer((msg, res) => {
+          server.close();
+          assert.strictEqual(msg.method, "POST");
+          assert.strictEqual(msg.url, "/v1/charges");
+          let rawData = "";
+          msg.on("data", (chunk) => {
+            rawData += chunk;
+          });
+          msg.on("end", () => {
+            assert.strictEqual(rawData, "amount=100&metadata%5Buser%5D=121899");
+            const body = JSON.stringify(dummy);
+            res.writeHead(status, {
+              "Content-Length": Buffer.byteLength(body),
+              "Content-Type": "application/json",
+            });
+            res.end(body);
+          });
+        })
+        .listen(() => {
+          const apibase = `http://localhost:${server.address().port}/v1`;
+          const payjp = new Payjp(apikey, { apibase });
+          payjp.charges.create(dummy).then((r) => {
+            assert.deepStrictEqual(r, dummy);
+            done();
+          });
+        });
+    });
+    it("keeps flat bracket notation keys for POST bodies", (done) => {
+      const dummy = {
+        amount: 100,
+        "metadata[user]": "test",
+      };
+      const status = 200;
+      const server = http
+        .createServer((msg, res) => {
+          server.close();
+          assert.strictEqual(msg.method, "POST");
+          assert.strictEqual(msg.url, "/v1/charges");
+          let rawData = "";
+          msg.on("data", (chunk) => {
+            rawData += chunk;
+          });
+          msg.on("end", () => {
+            assert.strictEqual(rawData, "amount=100&metadata%5Buser%5D=test");
+            const body = JSON.stringify(dummy);
+            res.writeHead(status, {
+              "Content-Length": Buffer.byteLength(body),
+              "Content-Type": "application/json",
+            });
+            res.end(body);
+          });
+        })
+        .listen(() => {
+          const apibase = `http://localhost:${server.address().port}/v1`;
+          const payjp = new Payjp(apikey, { apibase });
+          payjp.charges.create(dummy).then((r) => {
+            assert.deepStrictEqual(r, dummy);
+            done();
+          });
+        });
+    });
     it("return 400 by GET", (done) => {
       const dummy = { object: "payjp" };
       const status = 400;
@@ -141,6 +209,58 @@ describe("HTTP Requestor", () => {
             assert.strictEqual(e.response.body.error.message, "test");
             assert.strictEqual(e.response.body.error.status, status);
             assert.strictEqual(e.response.body.error.type, "client_error");
+            done();
+          });
+        });
+    });
+    it("serializes nested object values for GET query strings", (done) => {
+      const dummy = {
+        metadata: { user: 121899 },
+      };
+      const status = 200;
+      const server = http
+        .createServer((msg, res) => {
+          server.close();
+          assert.strictEqual(msg.method, "GET");
+          assert.strictEqual(msg.url, "/v1/charges?metadata%5Buser%5D=121899");
+          const body = JSON.stringify({});
+          res.writeHead(status, {
+            "Content-Length": Buffer.byteLength(body),
+            "Content-Type": "application/json",
+          });
+          res.end(body);
+        })
+        .listen(() => {
+          const apibase = `http://localhost:${server.address().port}/v1`;
+          const payjp = new Payjp(apikey, { apibase });
+          payjp.charges.request("GET", "charges", dummy).then((r) => {
+            assert.deepStrictEqual(r, {});
+            done();
+          });
+        });
+    });
+    it("keeps flat bracket notation keys for GET query strings", (done) => {
+      const dummy = {
+        "metadata[user]": "test",
+      };
+      const status = 200;
+      const server = http
+        .createServer((msg, res) => {
+          server.close();
+          assert.strictEqual(msg.method, "GET");
+          assert.strictEqual(msg.url, "/v1/charges?metadata%5Buser%5D=test");
+          const body = JSON.stringify({});
+          res.writeHead(status, {
+            "Content-Length": Buffer.byteLength(body),
+            "Content-Type": "application/json",
+          });
+          res.end(body);
+        })
+        .listen(() => {
+          const apibase = `http://localhost:${server.address().port}/v1`;
+          const payjp = new Payjp(apikey, { apibase });
+          payjp.charges.request("GET", "charges", dummy).then((r) => {
+            assert.deepStrictEqual(r, {});
             done();
           });
         });
