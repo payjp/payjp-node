@@ -413,7 +413,7 @@ namespace Payjp {
     email: string;
     id: string;
     merchant: Merchant;
-    team_id: string;
+    team_id: string | null;
   }
 
   export interface Merchant {
@@ -444,12 +444,12 @@ namespace Payjp {
     object: "tenant";
     platform_fee_rate: string;
     minimum_transfer_amount: number;
-    bank_account_number: string;
-    bank_branch_code: string;
-    bank_code: string;
-    bank_account_holder_name: string;
-    bank_account_type: string;
-    bank_account_status: string;
+    bank_account_number: string | null;
+    bank_branch_code: string | null;
+    bank_code: string | null;
+    bank_account_holder_name: string | null;
+    bank_account_type: string | null;
+    bank_account_status: string | null;
     currencies_supported: string[];
     default_currency: "jpy";
     payjp_fee_included: boolean;
@@ -460,7 +460,7 @@ namespace Payjp {
     object: "statement";
     livemode: boolean;
     id: string;
-    title: string;
+    title: string | null;
     type: "sales" | "service_fee" | "transfer_fee" | "forfeit" | "misc";
     created: number;
     updated: number;
